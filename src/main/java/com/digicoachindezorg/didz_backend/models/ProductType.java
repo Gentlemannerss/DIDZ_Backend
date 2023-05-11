@@ -1,4 +1,4 @@
-package com.digicoachindezorg.didz_backend;
+package com.digicoachindezorg.didz_backend.models;
 
 public enum ProductType {
     Book,
