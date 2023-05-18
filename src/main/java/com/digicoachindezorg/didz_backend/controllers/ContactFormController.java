@@ -1,6 +1,6 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
-import com.digicoachindezorg.didz_backend.dtos.ContactFormDto;
+import com.digicoachindezorg.didz_backend.models.ContactForm;
 import com.digicoachindezorg.didz_backend.services.ContactFormService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ContactFormController {
 
     @GetMapping
-    public ResponseEntity<List<ContactFormDto>> getAllContactForms() {
+    public ResponseEntity<List<ContactForm>> getAllContactForms() {
         return ResponseEntity.ok().body(ContactFormService.getAllContactForms());
     }
 }
