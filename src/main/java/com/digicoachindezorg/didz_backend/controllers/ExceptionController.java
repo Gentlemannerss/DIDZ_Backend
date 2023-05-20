@@ -50,4 +50,12 @@ public class ExceptionController {
     public ResponseEntity<Object> exception (ToManyCharException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.LENGTH_REQUIRED);
     }
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<Object> exception (NotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(value = AlreadyExistsException.class)
+    public ResponseEntity<Object> exception (AlreadyExistsException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

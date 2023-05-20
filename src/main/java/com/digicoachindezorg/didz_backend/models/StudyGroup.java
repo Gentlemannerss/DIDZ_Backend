@@ -1,12 +1,15 @@
 package com.digicoachindezorg.didz_backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -14,5 +17,11 @@ import lombok.Setter;
 public class StudyGroup {
     @Id
     @GeneratedValue
-    private Long id;
+    private String groupId;
+    @OneToOne
+    private Product product;
+    @ManyToMany
+    private List<User> users;
+    @OneToMany
+    private List<Message> pinboardMessages;
 }

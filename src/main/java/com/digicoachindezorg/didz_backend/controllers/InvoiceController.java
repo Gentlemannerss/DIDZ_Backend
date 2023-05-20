@@ -1,4 +1,4 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
-public class OfferteController {
+public class InvoiceController {
 }
