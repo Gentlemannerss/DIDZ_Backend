@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,8 +23,8 @@ public class Invoice {
     private Double totalPrice;
     private String address;
     private Double travelCost;
-    @ManyToMany(mappedBy = "invoices")
-    private List<User> users = new ArrayList<>();
+    @ManyToOne
+    private User user;
     @OneToMany(mappedBy = "invoice")
     private List<Product> products;
     private Integer amountOfParticipants;

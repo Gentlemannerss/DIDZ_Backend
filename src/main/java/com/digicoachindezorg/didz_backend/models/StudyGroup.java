@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "Study Groups")
+@Table(name = "studyGroups")
 public class StudyGroup {
     @Id
     @GeneratedValue
@@ -27,6 +27,6 @@ public class StudyGroup {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> users;
-    @OneToMany
+    @OneToMany(mappedBy = "studyGroup")
     private List<Message> pinboardMessages;
 }

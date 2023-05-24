@@ -33,16 +33,13 @@ public class User {
     private Integer phoneNumber;
     @ManyToMany(mappedBy = "users")
     private List<StudyGroup> studyGroups;
-    @OneToOne
+    @OneToOne //Moet eigenlijk gemapped worden door User
     private Review reviews;
-    @OneToMany(mappedBy = "message")
+    @OneToMany(mappedBy = "user")
     private List<Message> messages;
-    @ManyToMany
-    @JoinTable(
-            name = "user_invoice",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "invoice_id")
-    )
+    @OneToMany(mappedBy = "user")
+    private List<ContactForm> contactForms;
+    @OneToMany(mappedBy = "user")
     private List<Invoice> invoices;
 
    /*

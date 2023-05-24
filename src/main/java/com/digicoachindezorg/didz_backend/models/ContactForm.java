@@ -1,13 +1,12 @@
 package com.digicoachindezorg.didz_backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +24,6 @@ public class ContactForm {
     private String eMail;
     private String description;
     private Boolean termsOfCondition;
+    @ManyToOne
+    private User user;
 }

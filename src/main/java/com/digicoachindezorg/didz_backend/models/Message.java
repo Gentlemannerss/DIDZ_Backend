@@ -17,7 +17,10 @@ public class Message {
     @GeneratedValue
     private String messageId;
     private Boolean isConcept;
-    private String message;
+    @ManyToOne
+    private Message message;
     @ManyToOne
     private User user;
+    @ManyToOne
+    private StudyGroup studyGroup;
 }
