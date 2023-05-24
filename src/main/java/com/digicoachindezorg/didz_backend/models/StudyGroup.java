@@ -21,6 +21,11 @@ public class StudyGroup {
     @OneToOne
     private Product product;
     @ManyToMany
+    @JoinTable(
+            name = "studygroup_user",
+            joinColumns = @JoinColumn(name = "studygroup_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> users;
     @OneToMany
     private List<Message> pinboardMessages;

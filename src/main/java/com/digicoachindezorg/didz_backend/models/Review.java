@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.id.GUIDGenerator;
 
 import java.time.LocalDate;
 
@@ -22,7 +21,7 @@ public class Review {
     private Integer score;
     private LocalDate dateOfWriting;
     private String reviewDescription;
-    @OneToOne
+    @OneToOne(mappedBy = "reviews")
     private User customer; // Hier de rol van User<rol customer> opvangen
     @ManyToOne
     private Product product;

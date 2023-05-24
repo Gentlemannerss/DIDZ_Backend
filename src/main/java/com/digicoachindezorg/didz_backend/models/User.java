@@ -31,13 +31,23 @@ public class User {
     private LocalDate availability;
     private String companyName;
     private Integer phoneNumber;
-    @ManyToMany
+    @ManyToMany(mappedBy = "users")
     private List<StudyGroup> studyGroups;
     @OneToOne
     private Review reviews;
-    @OneToMany
+    @OneToMany(mappedBy = "message")
     private List<Message> messages;
     @ManyToMany
+    @JoinTable(
+            name = "user_invoice",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "invoice_id")
+    )
     private List<Invoice> invoices;
-    private List<Byte> images; //is voor image
+
+   /*
+   private List<Byte> images;
+   Dit is voor images, maar maak eerst de rest van de applicatie.
+
+   */
 }

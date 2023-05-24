@@ -1,7 +1,6 @@
 package com.digicoachindezorg.didz_backend.dtos;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 

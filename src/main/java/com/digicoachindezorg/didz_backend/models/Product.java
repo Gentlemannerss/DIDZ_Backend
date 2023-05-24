@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,14 +20,18 @@ public class Product {
     private String productId;
     private String productName;
     private Double price;
-    @OneToMany
+    @OneToMany(mappedBy = "product")
     private List<Review> reviews; //Alles met een List doen in plaats van een ArrayList
     @Enumerated
     private ProductType productType;
-    @OneToOne
+    @OneToOne(mappedBy = "product")
     private StudyGroup studyGroup;
     @ManyToOne
     private Invoice invoice;
 
-    private List<Byte> images; //dit zou moeten werken voor images
+    /*
+   private List<Byte> images;
+   Dit is voor images, maar maak eerst de rest van de applicatie.
+
+   */
 }

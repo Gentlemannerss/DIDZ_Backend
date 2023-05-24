@@ -1,6 +1,9 @@
 package com.digicoachindezorg.didz_backend.repositories;
 
+import com.digicoachindezorg.didz_backend.models.Invoice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface InvoiceRepository extends JpaRepository<Offerte, Long> {
+@Repository
+public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 }

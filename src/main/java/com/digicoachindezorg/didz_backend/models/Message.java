@@ -18,6 +18,6 @@ public class Message {
     private String messageId;
     private Boolean isConcept;
     private String message;
-    @OneToMany
+    @ManyToOne
     private User user;
 }
