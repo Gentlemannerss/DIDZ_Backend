@@ -1,9 +1,6 @@
 package com.digicoachindezorg.didz_backend.dtos;
 
-import com.digicoachindezorg.didz_backend.models.Invoice;
-import com.digicoachindezorg.didz_backend.models.Message;
-import com.digicoachindezorg.didz_backend.models.Review;
-import com.digicoachindezorg.didz_backend.models.StudyGroup;
+import com.digicoachindezorg.didz_backend.models.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,4 +22,5 @@ public class UserDto {
     public List<Message> messages;
     public List<Invoice> invoices;
     public List<Byte> images;
+    public List<ContactForm> contactForms;
 }
