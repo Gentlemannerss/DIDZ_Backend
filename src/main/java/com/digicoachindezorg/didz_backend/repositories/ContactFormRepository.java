@@ -2,11 +2,11 @@ package com.digicoachindezorg.didz_backend.repositories;
 
 import com.digicoachindezorg.didz_backend.models.ContactForm;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
+@Repository
 public interface ContactFormRepository extends JpaRepository<ContactForm, Long> {
-    List<ContactForm> getAllContactForms();
 
-    // Maak hierin een
+    // Maak hierin alleen specefieke zoekopdrachten zoals bijvoorbeeld zoek op kenteken.
 }

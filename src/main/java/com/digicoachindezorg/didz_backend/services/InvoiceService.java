@@ -3,5 +3,6 @@ package com.digicoachindezorg.didz_backend.services;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserSerivce {
+public class InvoiceService {
+    
 }

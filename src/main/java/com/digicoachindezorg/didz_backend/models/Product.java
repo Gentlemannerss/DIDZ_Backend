@@ -1,12 +1,15 @@
 package com.digicoachindezorg.didz_backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -14,7 +17,21 @@ import lombok.Setter;
 public class Product {
     @Id
     @GeneratedValue
-    private Long id;
+    private String productId;
+    private String productName;
+    private Double price;
+    @OneToMany(mappedBy = "product")
+    private List<Review> reviews; //Alles met een List doen in plaats van een ArrayList
+    @Enumerated
+    private ProductType productType;
+    @OneToOne(mappedBy = "product")
+    private StudyGroup studyGroup;
+    @ManyToOne
+    private Invoice invoice;
 
-    private ProductType;
+    /*
+   private List<Byte> images;
+   Dit is voor images, maar maak eerst de rest van de applicatie.
+
+   */
 }
