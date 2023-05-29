@@ -6,7 +6,6 @@ import com.digicoachindezorg.didz_backend.dtos.UserDto;
 import com.digicoachindezorg.didz_backend.models.StudyGroup;
 import com.digicoachindezorg.didz_backend.models.User;
         import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
-        import com.digicoachindezorg.didz_backend.repositories.ContactFormRepository;
 import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
         import org.springframework.beans.BeanUtils;
@@ -19,14 +18,11 @@ import com.digicoachindezorg.didz_backend.repositories.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ContactFormRepository contactFormRepository;
     private final InvoiceRepository invoiceRepository;
     private final StudyGroupRepository studyGroupRepository;
 
-    public UserService(UserRepository userRepository, ContactFormRepository contactFormRepository,
-                       InvoiceRepository invoiceRepository, StudyGroupRepository studyGroupRepository) {
+    public UserService(UserRepository userRepository, InvoiceRepository invoiceRepository, StudyGroupRepository studyGroupRepository) {
         this.userRepository = userRepository;
-        this.contactFormRepository = contactFormRepository;
         this.invoiceRepository = invoiceRepository;
         this.studyGroupRepository = studyGroupRepository; // Initialize studyGroupRepository
     }
