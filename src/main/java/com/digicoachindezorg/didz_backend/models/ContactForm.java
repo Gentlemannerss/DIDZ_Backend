@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -24,6 +22,9 @@ public class ContactForm {
     private String eMail;
     private String description;
     private Boolean termsOfCondition;
+    /*@OneToMany(mappedBy = "contactForm") // Added relationship mapping
+    private List<ContactForm> contactForms;*/
     @ManyToOne
+    @JoinColumn(name = "user_id") // Add join column
     private User user;
 }

@@ -31,20 +31,19 @@ public class User {
     private LocalDate availability;
     private String companyName;
     private Integer phoneNumber;
+
     @ManyToMany(mappedBy = "users")
     private List<StudyGroup> studyGroups;
-    @OneToOne //Moet eigenlijk gemapped worden door User
+
+    @OneToOne
     private Review reviews;
+
     @OneToMany(mappedBy = "user")
     private List<Message> messages;
+
     @OneToMany(mappedBy = "user")
     private List<ContactForm> contactForms;
+
     @OneToMany(mappedBy = "user")
     private List<Invoice> invoices;
-
-   /*
-   private List<Byte> images;
-   Dit is voor images, maar maak eerst de rest van de applicatie.
-
-   */
 }

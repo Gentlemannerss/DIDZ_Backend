@@ -1,19 +1,22 @@
 package com.digicoachindezorg.didz_backend.dtos;
 
-import com.digicoachindezorg.didz_backend.models.User;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+
+@Getter
+@Setter
 public class ContactFormDto {
     public Integer contactFormId;
     public String companyName;
     @NotBlank
     public String name;
     public Integer phoneNumber;
-    @Email
     public String eMail;
     public String description;
     public Boolean termsOfCondition;
-    public User user;
+    public List<ContactFormDto> contactForms; // Added contactForms field
 }
  
