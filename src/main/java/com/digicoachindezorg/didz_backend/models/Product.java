@@ -29,9 +29,11 @@ public class Product {
     @ManyToOne
     private Invoice invoice;
 
+}
+
+
     /*
    private List<Byte> images;
    Dit is voor images, maar maak eerst de rest van de applicatie.
 
    */
-}
