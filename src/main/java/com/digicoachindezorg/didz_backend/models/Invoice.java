@@ -24,6 +24,7 @@ public class Invoice {
     private String address;
     private Double travelCost;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
     @OneToMany(mappedBy = "invoice")
     private List<Product> products;

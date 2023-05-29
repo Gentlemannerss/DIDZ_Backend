@@ -35,7 +35,7 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<StudyGroup> studyGroups;
 
-    @OneToOne
+    @OneToOne(mappedBy = "user")
     private Review reviews;
 
     @OneToMany(mappedBy = "user")
