@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -27,6 +28,6 @@ public class StudyGroup {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> users;
-    @OneToMany(mappedBy = "studyGroup")
-    private List<Message> pinboardMessages;
+    @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> MessageBoard = new ArrayList<>();
 }

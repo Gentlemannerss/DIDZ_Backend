@@ -21,8 +21,8 @@ public class Review {
     private Integer score;
     private LocalDate dateOfWriting;
     private String reviewDescription;
-    @OneToOne(mappedBy = "reviews")
-    private User customer; // Hier de rol van User<rol customer> opvangen
+    @OneToOne
+    private User customer; // Hier de rol van User<rol customer> opvangen dus UserClass
     @ManyToOne
     private Product product;
 }

@@ -17,12 +17,17 @@ import java.time.LocalDate;
 public class Message {
     @Id
     @GeneratedValue
-    private String messageId;
+    private Long messageId;
+    private String messageContent;
     private Boolean isConcept;
     @ManyToOne
     private Message message;
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "sender_id") // Specify the join column name for the sender relationship
+    private User sender;
+    @ManyToOne
+    @JoinColumn(name = "receiver_id") // Specify the join column name for the receiver relationship
+    private User receiver;
     @ManyToOne
     private StudyGroup studyGroup;
     private LocalDate date;

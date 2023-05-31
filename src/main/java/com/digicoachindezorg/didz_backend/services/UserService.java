@@ -1,13 +1,13 @@
 package com.digicoachindezorg.didz_backend.services;
 
-import com.digicoachindezorg.didz_backend.dtos.UserDto;
+        import com.digicoachindezorg.didz_backend.dtos.UserDto;
         import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
         import com.digicoachindezorg.didz_backend.models.Invoice;
-import com.digicoachindezorg.didz_backend.models.StudyGroup;
-import com.digicoachindezorg.didz_backend.models.User;
+        import com.digicoachindezorg.didz_backend.models.StudyGroup;
+        import com.digicoachindezorg.didz_backend.models.User;
         import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
-import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
-import com.digicoachindezorg.didz_backend.repositories.UserRepository;
+        import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
+        import com.digicoachindezorg.didz_backend.repositories.UserRepository;
         import org.springframework.beans.BeanUtils;
         import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class UserService {
     public UserService(UserRepository userRepository, InvoiceRepository invoiceRepository, StudyGroupRepository studyGroupRepository) {
         this.userRepository = userRepository;
         this.invoiceRepository = invoiceRepository;
-        this.studyGroupRepository = studyGroupRepository; // Initialize studyGroupRepository
+        this.studyGroupRepository = studyGroupRepository;
     }
 
     public List<UserDto> getAllUsers() {

@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
-    @Query("SELECT i FROM Invoice i WHERE i.user.id = :userId")
+    @Query("SELECT i FROM Invoice i WHERE i.user.id = :userId") /*hier moet invoiceID meegegeven worden*/
     List<Invoice> findByUserUserId(Long userId);
 
     @Query("SELECT i FROM Invoice i WHERE i.user.id = :userId")

@@ -17,4 +17,5 @@ public class MessageDto {
     private MessageDto parentMessage;
     private UserDto user;
     private StudyGroupDto studyGroup;
+    private String receiverEmail;
 }

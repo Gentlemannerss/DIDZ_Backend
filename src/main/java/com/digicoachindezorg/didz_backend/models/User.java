@@ -27,7 +27,8 @@ public class User {
     private String eMail;
     private LocalDate dateOfBirth;
     private String address;
-    private String authority;
+    /*private String authority;*/
+    private UserClass userClass;
     private LocalDate availability;
     private String companyName;
     private Integer phoneNumber;
@@ -35,11 +36,14 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<StudyGroup> studyGroups;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "customer")
     private Review reviews;
 
-    @OneToMany(mappedBy = "user")
-    private List<Message> messages;
+    @OneToMany(mappedBy = "sender")
+    private List<Message> sentMessages;
+
+    @OneToMany(mappedBy = "receiver")
+    private List<Message> receivedMessages;
 
     @OneToMany(mappedBy = "user")
     private List<ContactForm> contactForms;
