@@ -17,7 +17,7 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue
-    private String productId;
+    private Long productId;
     private String productName;
     private Double price;
     @OneToMany(mappedBy = "product")
@@ -27,6 +27,7 @@ public class Product {
     @OneToOne(mappedBy = "product")
     private StudyGroup studyGroup;
     @ManyToOne
+    @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
 }

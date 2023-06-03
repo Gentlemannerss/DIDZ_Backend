@@ -18,7 +18,7 @@ import java.util.List;
 public class Invoice {
     @Id
     @GeneratedValue
-    private Integer invoiceId;
+    private Long invoiceId;
     private LocalDate orderDate;
     private Double totalPrice;
     private String address;

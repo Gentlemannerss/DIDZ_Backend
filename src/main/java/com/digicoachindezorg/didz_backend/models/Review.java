@@ -17,12 +17,13 @@ import java.time.LocalDate;
 public class Review {
     @Id
     @GeneratedValue
-    private Integer reviewId;
+    private Long reviewId;
     private Integer score;
     private LocalDate dateOfWriting;
     private String reviewDescription;
     @OneToOne
     private User customer; // Hier de rol van User<rol customer> opvangen dus UserClass
     @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
 }

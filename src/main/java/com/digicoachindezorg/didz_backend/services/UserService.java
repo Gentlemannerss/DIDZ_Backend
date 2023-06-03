@@ -1,18 +1,18 @@
 package com.digicoachindezorg.didz_backend.services;
 
-        import com.digicoachindezorg.didz_backend.dtos.UserDto;
-        import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
-        import com.digicoachindezorg.didz_backend.models.Invoice;
-        import com.digicoachindezorg.didz_backend.models.StudyGroup;
-        import com.digicoachindezorg.didz_backend.models.User;
-        import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
-        import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
-        import com.digicoachindezorg.didz_backend.repositories.UserRepository;
-        import org.springframework.beans.BeanUtils;
-        import org.springframework.stereotype.Service;
+import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
+import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
+import com.digicoachindezorg.didz_backend.models.Invoice;
+import com.digicoachindezorg.didz_backend.models.StudyGroup;
+import com.digicoachindezorg.didz_backend.models.User;
+import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
+import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
+import com.digicoachindezorg.didz_backend.repositories.UserRepository;
+import org.springframework.stereotype.Service;
 
-        import java.util.List;
-        import java.util.stream.Collectors;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -27,34 +27,34 @@ public class UserService {
         this.studyGroupRepository = studyGroupRepository;
     }
 
-    public List<UserDto> getAllUsers() {
+    public List<UserOutputDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(this::toUserDto)
+                .map(this::transferUserToUserOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public UserDto getUser(Long id) throws RecordNotFoundException {
+    public UserOutputDto getUser(Long id) throws RecordNotFoundException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + id));
-        return toUserDto(user);
+        return transferUserToUserOutputDto(user);
     }
 
-    public UserDto createUser(UserDto userDto) {
-        User user = fromUserDto(userDto);
+    public UserOutputDto createUser(UserInputDto userInputDto) {
+        User user = transferUserInputDtoToUser(userInputDto);
         User createdUser = userRepository.save(user);
-        return toUserDto(createdUser);
+        return transferUserToUserOutputDto(createdUser);
     }
 
-    public UserDto updateUser(Long id, UserDto userDtoToUpdate) throws RecordNotFoundException {
+    public UserOutputDto updateUser(Long id, UserInputDto userInputDtoToUpdate) throws RecordNotFoundException {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + id));
 
         // Update the fields of the existing user
-        BeanUtils.copyProperties(userDtoToUpdate, existingUser);
+        User updatedUser = updateUserInputDtoToUser(userInputDtoToUpdate, existingUser);
 
-        User updatedUser = userRepository.save(existingUser);
-        return toUserDto(updatedUser);
+        User savedUser = userRepository.save(updatedUser);
+        return transferUserToUserOutputDto(savedUser);
     }
 
     public void deleteUser(Long id) throws RecordNotFoundException {
@@ -87,15 +87,121 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private UserDto toUserDto(User user) {
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(user, userDto);
+    private UserOutputDto transferUserToUserOutputDto(User user) {
+        UserOutputDto userDto = new UserOutputDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        /*userDto.setPassword(); waar wordt het wachtwoord van de gebruiker opgevangen?*/
+        userDto.setFullName(user.getFullName());
+        userDto.setDateOfBirth(user.getDateOfBirth());
+        userDto.setEMail(user.getEMail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setAddress(user.getAddress());
+        userDto.setAuthority(user.getAuthority());
+        userDto.setAvailability(user.getAvailability());
+        userDto.setCompanyName(user.getCompanyName());
+        userDto.setInvoices(user.getInvoices());
+        userDto.setStudyGroups(user.getStudyGroups());
+        userDto.setReviews(user.getReviews());
+        userDto.setMessages(user.getReceivedMessages(), user.getSentMessages()); // Wat moet ik hier doen om beide messages op te vangen aan een message.
+        userDto.setContactForms(user.getContactForms());
         return userDto;
     }
 
-    private User fromUserDto(UserDto userDto) {
+    private User transferUserInputDtoToUser(UserInputDto userDto) {
         User user = new User();
-        BeanUtils.copyProperties(userDto, user);
+        if (userDto.getUsername()!=null) {
+            user.setUsername(userDto.getUsername());
+        }
+        if (userDto.getFullName()!=null) {
+            user.setFullName(userDto.getFullName());
+        }
+        if (userDto.getDateOfBirth()!=null) {
+            user.setDateOfBirth(userDto.getDateOfBirth());
+        }
+        if (userDto.getEMail()!=null) {
+            user.setEMail(userDto.getEMail());
+        }
+        if (userDto.getPhoneNumber()!=null) {
+            user.setPhoneNumber(userDto.getPhoneNumber());
+        }
+        if (userDto.getAddress()!=null) {
+            user.setAddress(userDto.getAddress());
+        }
+        if (userDto.getAuthority()!=null) {
+            user.setAuthority(userDto.getAuthority());
+        }
+        if (userDto.getAvailability()!=null) {
+            user.setAvailability(userDto.getAvailability());
+        }
+        if (userDto.getCompanyName()!=null) {
+            user.setCompanyName(userDto.getCompanyName());
+        }
+        if (userDto.getInvoices()!=null) {
+            user.setInvoices(userDto.getInvoices());
+        }
+        if (userDto.getStudyGroups()!=null) {
+            user.setStudyGroups(userDto.getStudyGroups());
+        }
+        if (userDto.getReviews()!=null) {
+            user.setReviews(userDto.getReviews());
+        }
+        if (userDto.getMessages()!=null) {
+            user.setReceivedMessages(userDto.getMessages());
+            user.setSentMessages(userDto.getMessages());
+            /*OOK hier weer, wat moet ik doen met de received message en de sent message?*/
+        }
+        if (userDto.getContactForms()!=null) {
+            user.setContactForms(userDto.getContactForms());
+        }
+        return user;
+    }
+
+    private User updateUserInputDtoToUser(UserInputDto userDto, User user) {
+        if (userDto.getUsername()!=null) {
+            user.setUsername(userDto.getUsername());
+        }
+        if (userDto.getFullName()!=null) {
+            user.setFullName(userDto.getFullName());
+        }
+        if (userDto.getDateOfBirth()!=null) {
+            user.setDateOfBirth(userDto.getDateOfBirth());
+        }
+        if (userDto.getEMail()!=null) {
+            user.setEMail(userDto.getEMail());
+        }
+        if (userDto.getPhoneNumber()!=null) {
+            user.setPhoneNumber(userDto.getPhoneNumber());
+        }
+        if (userDto.getAddress()!=null) {
+            user.setAddress(userDto.getAddress());
+        }
+        if (userDto.getAuthority()!=null) {
+            user.setAuthority(userDto.getAuthority());
+        }
+        if (userDto.getAvailability()!=null) {
+            user.setAvailability(userDto.getAvailability());
+        }
+        if (userDto.getCompanyName()!=null) {
+            user.setCompanyName(userDto.getCompanyName());
+        }
+        if (userDto.getInvoices()!=null) {
+            user.setInvoices(userDto.getInvoices());
+        }
+        if (userDto.getStudyGroups()!=null) {
+            user.setStudyGroups(userDto.getStudyGroups());
+        }
+        if (userDto.getReviews()!=null) {
+            user.setReviews(userDto.getReviews());
+        }
+        if (userDto.getMessages()!=null) {
+            user.setReceivedMessages(userDto.getMessages());
+            user.setSentMessages(userDto.getMessages());
+            /*OOK hier weer, wat moet ik doen met de received message en de sent message?*/
+        }
+        if (userDto.getContactForms()!=null) {
+            user.setContactForms(userDto.getContactForms());
+        }
         return user;
     }
 }

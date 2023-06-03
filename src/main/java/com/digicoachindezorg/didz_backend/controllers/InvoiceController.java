@@ -1,6 +1,7 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
-import com.digicoachindezorg.didz_backend.dtos.InvoiceDto;
+import com.digicoachindezorg.didz_backend.dtos.input.InvoiceInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.InvoiceOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.services.InvoiceService;
 import org.springframework.http.HttpStatus;
@@ -20,41 +21,41 @@ public class InvoiceController {
     }
 
     @GetMapping("/{invoiceId}")
-    public ResponseEntity<InvoiceDto> getInvoice(@PathVariable("invoiceId") Long invoiceId) throws RecordNotFoundException {
-        InvoiceDto invoiceDto = invoiceService.getInvoice(invoiceId);
+    public ResponseEntity<InvoiceOutputDto> getInvoice(@PathVariable("invoiceId") Long invoiceId) throws RecordNotFoundException {
+        InvoiceOutputDto invoiceDto = invoiceService.getInvoice(invoiceId);
         return new ResponseEntity<>(invoiceDto, HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<InvoiceDto>> getInvoicesByUserId(@PathVariable("userId") Long userId) {
-        List<InvoiceDto> invoices = invoiceService.getInvoicesByUserId(userId);
+    public ResponseEntity<List<InvoiceOutputDto>> getInvoicesByUserId(@PathVariable("userId") Long userId) {
+        List<InvoiceOutputDto> invoices = invoiceService.getInvoicesByUserId(userId);
         return new ResponseEntity<>(invoices, HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}/all")
-    public ResponseEntity<List<InvoiceDto>> getAllInvoicesByUserId(@PathVariable("userId") Long userId) {
-        List<InvoiceDto> invoices = invoiceService.getAllInvoicesByUserId(userId);
+    public ResponseEntity<List<InvoiceOutputDto>> getAllInvoicesByUserId(@PathVariable("userId") Long userId) {
+        List<InvoiceOutputDto> invoices = invoiceService.getAllInvoicesByUserId(userId);
         return new ResponseEntity<>(invoices, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<InvoiceDto>> getAllInvoices() {
-        List<InvoiceDto> invoices = invoiceService.getAllInvoices();
+    public ResponseEntity<List<InvoiceOutputDto>> getAllInvoices() {
+        List<InvoiceOutputDto> invoices = invoiceService.getAllInvoices();
         return new ResponseEntity<>(invoices, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<InvoiceDto> createInvoice(@RequestBody InvoiceDto invoiceDto) {
-        InvoiceDto createdInvoice = invoiceService.createInvoice(invoiceDto);
+    public ResponseEntity<InvoiceOutputDto> createInvoice(@RequestBody InvoiceInputDto invoiceDto) {
+        InvoiceOutputDto createdInvoice = invoiceService.createInvoice(invoiceDto);
         return new ResponseEntity<>(createdInvoice, HttpStatus.CREATED);
     }
 
     @PutMapping("/{invoiceId}")
-    public ResponseEntity<InvoiceDto> updateInvoice(
+    public ResponseEntity<InvoiceOutputDto> updateInvoice(
             @PathVariable("invoiceId") Long invoiceId,
-            @RequestBody InvoiceDto updatedInvoiceDto
+            @RequestBody InvoiceInputDto updatedInvoiceDto
     ) throws RecordNotFoundException {
-        InvoiceDto updatedInvoice = invoiceService.updateInvoice(invoiceId, updatedInvoiceDto);
+        InvoiceOutputDto updatedInvoice = invoiceService.updateInvoice(invoiceId, updatedInvoiceDto);
         return new ResponseEntity<>(updatedInvoice, HttpStatus.OK);
     }
 

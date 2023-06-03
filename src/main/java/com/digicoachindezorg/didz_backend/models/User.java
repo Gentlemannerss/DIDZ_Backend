@@ -27,8 +27,7 @@ public class User {
     private String eMail;
     private LocalDate dateOfBirth;
     private String address;
-    /*private String authority;*/
-    private UserClass userClass;
+    private String authority;
     private LocalDate availability;
     private String companyName;
     private Integer phoneNumber;

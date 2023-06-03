@@ -1,6 +1,7 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
-import com.digicoachindezorg.didz_backend.dtos.MessageDto;
+import com.digicoachindezorg.didz_backend.dtos.input.MessageInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.MessageOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.services.MessageService;
 import org.springframework.http.HttpStatus;
@@ -21,39 +22,39 @@ public class MessageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MessageDto> getMessage(@PathVariable("id") Long id) throws RecordNotFoundException {
-        MessageDto message = messageService.getMessage(id);
+    public ResponseEntity<MessageOutputDto> getMessage(@PathVariable("id") Long id) throws RecordNotFoundException {
+        MessageOutputDto message = messageService.getMessage(id);
         return ResponseEntity.ok(message);
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<MessageDto>> getAllMessagesFromUser(@PathVariable("userId") Long userId) {
-        List<MessageDto> messages = messageService.getAllMessagesFromUser(userId);
+    public ResponseEntity<List<MessageOutputDto>> getAllMessagesFromUser(@PathVariable("userId") Long userId) {
+        List<MessageOutputDto> messages = messageService.getAllMessagesFromUser(userId);
         return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<List<MessageDto>> getMessagesFromDate(@PathVariable("date") LocalDate date) {
-        List<MessageDto> messages = messageService.getMessagesFromDate(date);
+    public ResponseEntity<List<MessageOutputDto>> getMessagesFromDate(@PathVariable("date") LocalDate date) {
+        List<MessageOutputDto> messages = messageService.getMessagesFromDate(date);
         return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/sent/{userId}")
-    public ResponseEntity<List<MessageDto>> getSentMessages(@PathVariable("userId") Long userId) {
-        List<MessageDto> messages = messageService.getSentMessages(userId);
+    public ResponseEntity<List<MessageOutputDto>> getSentMessages(@PathVariable("userId") Long userId) {
+        List<MessageOutputDto> messages = messageService.getSentMessages(userId);
         return ResponseEntity.ok(messages);
     }
 
     @PostMapping
-    public ResponseEntity<MessageDto> createMessage(@RequestBody MessageDto messageDto) {
-        MessageDto createdMessage = messageService.createMessage(messageDto);
+    public ResponseEntity<MessageOutputDto> createMessage(@RequestBody MessageInputDto messageDto) {
+        MessageOutputDto createdMessage = messageService.createMessage(messageDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMessage);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MessageDto> updateMessage(@PathVariable("id") Long id,
-                                                    @RequestBody MessageDto messageDtoToUpdate) throws RecordNotFoundException {
-        MessageDto updatedMessage = messageService.updateMessage(id, messageDtoToUpdate);
+    public ResponseEntity<MessageOutputDto> updateMessage(@PathVariable("id") Long id,
+                                                          @RequestBody MessageInputDto messageDtoToUpdate) throws RecordNotFoundException {
+        MessageOutputDto updatedMessage = messageService.updateMessage(id, messageDtoToUpdate);
         return ResponseEntity.ok(updatedMessage);
     }
 
@@ -64,19 +65,19 @@ public class MessageController {
     }
 
     @PostMapping("/send/user/{senderId}/{receiverId}")
-    public ResponseEntity<MessageDto> sendMessageToUser(@PathVariable("senderId") Long senderId,
-                                                        @PathVariable("receiverId") Long receiverId,
-                                                        @RequestBody MessageDto messageDto) throws RecordNotFoundException {
-        MessageDto sentMessage = messageService.sendMessageToUser(senderId, receiverId, messageDto);
+    public ResponseEntity<MessageOutputDto> sendMessageToUser(@PathVariable("senderId") Long senderId,
+                                                              @PathVariable("receiverId") Long receiverId,
+                                                              @RequestBody MessageInputDto messageDto) throws RecordNotFoundException {
+        MessageOutputDto sentMessage = messageService.sendMessageToUser(senderId, receiverId, messageDto);
         return ResponseEntity.ok(sentMessage);
     }
 
     @PostMapping("/send/message-board/{studyGroupId}/{senderId}")
-    public ResponseEntity<MessageDto> sendMessageToMessageBoard(@PathVariable("studyGroupId") Long studyGroupId,
-                                                                @PathVariable("senderId") Long senderId,
-                                                                @RequestBody MessageDto messageDto) {
+    public ResponseEntity<MessageOutputDto> sendMessageToMessageBoard(@PathVariable("studyGroupId") Long studyGroupId,
+                                                                      @PathVariable("senderId") Long senderId,
+                                                                      @RequestBody MessageInputDto messageDto) {
         try {
-            MessageDto sentMessage = messageService.sendMessageToMessageBoard(senderId, studyGroupId, messageDto);
+            MessageOutputDto sentMessage = messageService.sendMessageToMessageBoard(senderId, studyGroupId, messageDto);
             return ResponseEntity.ok(sentMessage);
         } catch (RecordNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -84,15 +85,15 @@ public class MessageController {
     }
 
     @GetMapping("/study-group/{studyGroupId}")
-    public ResponseEntity<List<MessageDto>> getMessagesFromStudyGroup(@PathVariable("studyGroupId") Long studyGroupId) {
-        List<MessageDto> messages = messageService.getMessagesFromStudyGroup(studyGroupId);
+    public ResponseEntity<List<MessageOutputDto>> getMessagesFromStudyGroup(@PathVariable("studyGroupId") Long studyGroupId) {
+        List<MessageOutputDto> messages = messageService.getMessagesFromStudyGroup(studyGroupId);
         return ResponseEntity.ok(messages);
     }
 
     @PostMapping("/study-group/{studyGroupId}")
-    public ResponseEntity<MessageDto> createMessageInStudyGroup(@PathVariable("studyGroupId") Long studyGroupId,
-                                                                @RequestBody MessageDto messageDto) throws RecordNotFoundException {
-        MessageDto createdMessage = messageService.createMessageInStudyGroup(studyGroupId, messageDto);
+    public ResponseEntity<MessageOutputDto> createMessageInStudyGroup(@PathVariable("studyGroupId") Long studyGroupId,
+                                                                      @RequestBody MessageInputDto messageDto) throws RecordNotFoundException {
+        MessageOutputDto createdMessage = messageService.createMessageInStudyGroup(studyGroupId, messageDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMessage);
     }
 

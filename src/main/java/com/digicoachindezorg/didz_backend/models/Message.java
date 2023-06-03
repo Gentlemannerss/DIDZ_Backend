@@ -25,10 +25,11 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "sender_id") // Specify the join column name for the sender relationship
     private User sender;
-    @ManyToOne
+    @ManyToOne //Dit moet een ManyToMany relatie worden. Een Coach kan meerdere berichten versturen naar gebruikers.
     @JoinColumn(name = "receiver_id") // Specify the join column name for the receiver relationship
     private User receiver;
     @ManyToOne
+    @JoinColumn(name = "studyGroup_id")
     private StudyGroup studyGroup;
     private LocalDate date;
 }

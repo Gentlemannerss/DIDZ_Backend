@@ -1,13 +1,13 @@
 package com.digicoachindezorg.didz_backend.services;
 
-import com.digicoachindezorg.didz_backend.dtos.StudyGroupDto;
-import com.digicoachindezorg.didz_backend.dtos.UserDto;
+import com.digicoachindezorg.didz_backend.dtos.input.StudyGroupInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.StudyGroupOutputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.StudyGroup;
 import com.digicoachindezorg.didz_backend.models.User;
 import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,44 +24,44 @@ public class StudyGroupService {
         this.userRepository = userRepository;
     }
 
-    public List<StudyGroupDto> getAllStudyGroups() {
+    public List<StudyGroupOutputDto> getAllStudyGroups() {
         List<StudyGroup> studyGroups = studyGroupRepository.findAll();
         return studyGroups.stream()
-                .map(this::toStudyGroupDto)
+                .map(this::transferStudyGroupToStudyGroupOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public List<StudyGroupDto> getStudyGroupsByProduct(Long productId) {
+    public List<StudyGroupOutputDto> getStudyGroupsByProduct(Long productId) {
         List<StudyGroup> studyGroups = studyGroupRepository.findByProduct_ProductId(productId);
         return studyGroups.stream()
-                .map(this::toStudyGroupDto)
+                .map(this::transferStudyGroupToStudyGroupOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public StudyGroupDto getStudyGroup(Long id) throws RecordNotFoundException {
+    public StudyGroupOutputDto getStudyGroup(Long id) throws RecordNotFoundException {
         StudyGroup studyGroup = studyGroupRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + id));
-        return toStudyGroupDto(studyGroup);
+        return transferStudyGroupToStudyGroupOutputDto(studyGroup);
     }
 
-    public StudyGroupDto createStudyGroup(StudyGroupDto studyGroupDto) {
-        StudyGroup studyGroup = fromStudyGroupDto(studyGroupDto);
+    public StudyGroupOutputDto createStudyGroup(StudyGroupInputDto studyGroupInputDto) {
+        StudyGroup studyGroup = transferStudyGroupInputDtoToStudyGroup(studyGroupInputDto);
         StudyGroup createdStudyGroup = studyGroupRepository.save(studyGroup);
-        return toStudyGroupDto(createdStudyGroup);
+        return transferStudyGroupToStudyGroupOutputDto(createdStudyGroup);
     }
 
-    public StudyGroupDto updateStudyGroup(Long id, StudyGroupDto studyGroupDtoToUpdate) throws RecordNotFoundException {
+    public StudyGroupOutputDto updateStudyGroup(Long id, StudyGroupInputDto studyGroupInputDtoToUpdate) throws RecordNotFoundException {
         StudyGroup existingStudyGroup = studyGroupRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + id));
 
         // Update the fields of the existing study group
-        BeanUtils.copyProperties(studyGroupDtoToUpdate, existingStudyGroup);
+        StudyGroup updatedStudyGroup = updateStudyGroupInputDtoToStudyGroup(studyGroupInputDtoToUpdate, existingStudyGroup);
 
-        StudyGroup updatedStudyGroup = studyGroupRepository.save(existingStudyGroup);
-        return toStudyGroupDto(updatedStudyGroup);
+        StudyGroup savedStudyGroup = studyGroupRepository.save(updatedStudyGroup);
+        return transferStudyGroupToStudyGroupOutputDto(savedStudyGroup);
     }
 
-    public StudyGroupDto addUserToStudyGroup(Long studyGroupId, Long userId) throws RecordNotFoundException {
+    public StudyGroupOutputDto addUserToStudyGroup(Long studyGroupId, Long userId) throws RecordNotFoundException {
         StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
                 .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
 
@@ -70,10 +70,10 @@ public class StudyGroupService {
 
         studyGroup.getUsers().add(user);
         StudyGroup updatedStudyGroup = studyGroupRepository.save(studyGroup);
-        return toStudyGroupDto(updatedStudyGroup);
+        return transferStudyGroupToStudyGroupOutputDto(updatedStudyGroup);
     }
 
-    public StudyGroupDto removeUserFromStudyGroup(Long studyGroupId, Long userId) throws RecordNotFoundException {
+    public StudyGroupOutputDto removeUserFromStudyGroup(Long studyGroupId, Long userId) throws RecordNotFoundException {
         StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
                 .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
 
@@ -82,18 +82,28 @@ public class StudyGroupService {
 
         studyGroup.getUsers().remove(user);
         StudyGroup updatedStudyGroup = studyGroupRepository.save(studyGroup);
-        return toStudyGroupDto(updatedStudyGroup);
+        return transferStudyGroupToStudyGroupOutputDto(updatedStudyGroup);
     }
 
-    public List<UserDto> getStudyGroupUsers(Long studyGroupId) throws RecordNotFoundException {
+    public List<UserOutputDto> getStudyGroupUsers(Long studyGroupId) throws RecordNotFoundException {
         StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
                 .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
 
         return studyGroup.getUsers().stream()
                 .map(user -> {
-                    UserDto userDto = new UserDto();
-                    BeanUtils.copyProperties(user, userDto);
-                    return userDto;
+                    UserOutputDto userOutputDto = new UserOutputDto();
+                    userOutputDto.setId(user.getId());
+                    userOutputDto.setUsername(user.getUsername());
+                    /*userOutputDto.setPassword(user.getPassword()); Je wil natuurlijk niks met het password doen.*/
+                    userOutputDto.setFullName(user.getFullName());
+                    userOutputDto.setEMail(user.getEMail());
+                    userOutputDto.setDateOfBirth(user.getDateOfBirth());
+                    userOutputDto.setAddress(user.getAddress());
+                    userOutputDto.setAuthority(user.getAuthority());
+                    userOutputDto.setAvailability(user.getAvailability());
+                    userOutputDto.setCompanyName(user.getCompanyName());
+                    userOutputDto.setPhoneNumber(user.getPhoneNumber());
+                    return userOutputDto;
                 })
                 .collect(Collectors.toList());
     }
@@ -105,17 +115,39 @@ public class StudyGroupService {
         studyGroupRepository.deleteById(id);
     }
 
-    private StudyGroupDto toStudyGroupDto(StudyGroup studyGroup) {
-        StudyGroupDto studyGroupDto = new StudyGroupDto();
-        BeanUtils.copyProperties(studyGroup, studyGroupDto);
-        // Additional mapping for nested entities
+    private StudyGroupOutputDto transferStudyGroupToStudyGroupOutputDto(StudyGroup studyGroup) {
+        StudyGroupOutputDto studyGroupDto = new StudyGroupOutputDto();
+        studyGroupDto.setGroupId(studyGroup.getGroupId());
+        studyGroupDto.setUsers(studyGroup.getUsers());
+        studyGroupDto.setProduct(studyGroup.getProduct());
+        studyGroupDto.setPinboardMessages(studyGroup.getMessageBoard());
         return studyGroupDto;
     }
 
-    private StudyGroup fromStudyGroupDto(StudyGroupDto studyGroupDto) {
+    private StudyGroup transferStudyGroupInputDtoToStudyGroup(StudyGroupInputDto studyGroupDto) {
         StudyGroup studyGroup = new StudyGroup();
-        BeanUtils.copyProperties(studyGroupDto, studyGroup);
-        // Additional mapping for nested entities
+        if (studyGroupDto.getUsers()!=null) {
+            studyGroup.setUsers(studyGroupDto.getUsers());
+        }
+        if (studyGroupDto.getProduct()!=null) {
+            studyGroup.setProduct(studyGroupDto.getProduct());
+        }
+        if (studyGroupDto.getPinboardMessages()!=null) {
+            studyGroup.setMessageBoard(studyGroupDto.getPinboardMessages());
+        }
+        return studyGroup;
+    }
+
+    private StudyGroup updateStudyGroupInputDtoToStudyGroup(StudyGroupInputDto studyGroupDto, StudyGroup studyGroup) {
+        if (studyGroupDto.getUsers()!=null) {
+            studyGroup.setUsers(studyGroupDto.getUsers());
+        }
+        if (studyGroupDto.getProduct()!=null) {
+            studyGroup.setProduct(studyGroupDto.getProduct());
+        }
+        if (studyGroupDto.getPinboardMessages()!=null) {
+            studyGroup.setMessageBoard(studyGroupDto.getPinboardMessages());
+        }
         return studyGroup;
     }
 }

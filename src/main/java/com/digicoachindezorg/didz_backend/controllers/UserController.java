@@ -1,12 +1,12 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
-import com.digicoachindezorg.didz_backend.dtos.UserDto;
+import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -21,20 +21,20 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> users = userService.getAllUsers();
+    public ResponseEntity<List<UserOutputDto>> getAllUsers() {
+        List<UserOutputDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id) throws RecordNotFoundException {
-        UserDto user = userService.getUser(id);
+    public ResponseEntity<UserOutputDto> getUser(@PathVariable Long id) throws RecordNotFoundException {
+        UserOutputDto user = userService.getUser(id);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDtoToUpdate) throws RecordNotFoundException {
-        UserDto updatedUser = userService.updateUser(id, userDtoToUpdate);
+    public ResponseEntity<UserOutputDto> updateUser(@PathVariable Long id, @RequestBody UserInputDto userInputDtoToUpdate) throws RecordNotFoundException {
+        UserOutputDto updatedUser = userService.updateUser(id, userInputDtoToUpdate);
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -45,8 +45,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        UserDto createdUser = userService.createUser(userDto);
+    public ResponseEntity<UserOutputDto> createUser(@RequestBody UserInputDto userInputDto) {
+        UserOutputDto createdUser = userService.createUser(userInputDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 

@@ -1,6 +1,7 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
-import com.digicoachindezorg.didz_backend.dtos.ReviewDto;
+import com.digicoachindezorg.didz_backend.dtos.input.ReviewInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.ReviewOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.services.ReviewService;
 import org.springframework.http.HttpStatus;
@@ -20,26 +21,26 @@ public class ReviewController {
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<List<ReviewDto>> getAllReviewsPerProduct(@PathVariable Long productId) {
-        List<ReviewDto> reviews = reviewService.getAllReviewsPerProduct(productId);
+    public ResponseEntity<List<ReviewOutputDto>> getAllReviewsPerProduct(@PathVariable Long productId) {
+        List<ReviewOutputDto> reviews = reviewService.getAllReviewsPerProduct(productId);
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReviewDto> getReview(@PathVariable Long id) throws RecordNotFoundException {
-        ReviewDto reviewDto = reviewService.getReview(id);
+    public ResponseEntity<ReviewOutputDto> getReview(@PathVariable Long id) throws RecordNotFoundException {
+        ReviewOutputDto reviewDto = reviewService.getReview(id);
         return ResponseEntity.ok(reviewDto);
     }
 
     @PostMapping
-    public ResponseEntity<ReviewDto> createReview(@RequestBody ReviewDto reviewDto) throws RecordNotFoundException {
-        ReviewDto createdReview = reviewService.createReview(reviewDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
+    public ResponseEntity<ReviewOutputDto> createReview(@RequestBody ReviewInputDto reviewInputDto) throws RecordNotFoundException { /*@PathVaribale OF @RequestBody voor de userID*/
+        ReviewOutputDto reviewDto = reviewService.createReview(reviewInputDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reviewDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReviewDto> updateReview(@PathVariable Long id, @RequestBody ReviewDto reviewDto) throws RecordNotFoundException {
-        ReviewDto updatedReview = reviewService.updateReview(id, reviewDto);
+    public ResponseEntity<ReviewOutputDto> updateReview(@PathVariable Long id, @RequestBody ReviewInputDto reviewInputDto) throws RecordNotFoundException {
+        ReviewOutputDto updatedReview = reviewService.updateReview(id, reviewInputDto);
         return ResponseEntity.ok(updatedReview);
     }
 
@@ -50,8 +51,8 @@ public class ReviewController {
     }
 
     @PostMapping("/product/{productId}")
-    public ResponseEntity<ReviewDto> createReviewForProduct(@RequestBody ReviewDto reviewDto, @PathVariable Long productId) throws RecordNotFoundException {
-        ReviewDto createdReview = reviewService.createReviewForProduct(reviewDto, productId);
+    public ResponseEntity<ReviewOutputDto> createReviewForProduct(@RequestBody ReviewInputDto reviewInputDto, @PathVariable Long productId) throws RecordNotFoundException {
+        ReviewOutputDto createdReview = reviewService.createReviewForProduct(reviewInputDto, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 public class StudyGroup {
     @Id
     @GeneratedValue
-    private String groupId;
+    private Long groupId;
     @OneToOne
     private Product product;
     @ManyToMany
@@ -28,6 +28,6 @@ public class StudyGroup {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> users;
-    @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "studyGroup")
     private List<Message> MessageBoard = new ArrayList<>();
 }

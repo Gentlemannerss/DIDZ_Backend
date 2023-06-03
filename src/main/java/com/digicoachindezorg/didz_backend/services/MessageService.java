@@ -1,6 +1,7 @@
 package com.digicoachindezorg.didz_backend.services;
 
-import com.digicoachindezorg.didz_backend.dtos.MessageDto;
+import com.digicoachindezorg.didz_backend.dtos.input.MessageInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.MessageOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Message;
 import com.digicoachindezorg.didz_backend.models.StudyGroup;
@@ -8,7 +9,6 @@ import com.digicoachindezorg.didz_backend.models.User;
 import com.digicoachindezorg.didz_backend.repositories.MessageRepository;
 import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,48 +28,48 @@ public class MessageService {
         this.userRepository = userRepository;
     }
 
-    public MessageDto getMessage(Long id) throws RecordNotFoundException {
+    public MessageOutputDto getMessage(Long id) throws RecordNotFoundException {
         Message message = messageRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Message not found with id: " + id));
-        return toMessageDto(message);
+        return transferMessageToMessageOutputDto(message);
     }
 
-    public List<MessageDto> getAllMessagesFromUser(Long userId) {
+    public List<MessageOutputDto> getAllMessagesFromUser(Long userId) {
         List<Message> messages = messageRepository.findBySender_Id(userId);
         return messages.stream()
-                .map(this::toMessageDto)
+                .map(this::transferMessageToMessageOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public List<MessageDto> getMessagesFromDate(LocalDate date) {
+    public List<MessageOutputDto> getMessagesFromDate(LocalDate date) {
         List<Message> messages = messageRepository.findByDate(date);
         return messages.stream()
-                .map(this::toMessageDto)
+                .map(this::transferMessageToMessageOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public List<MessageDto> getSentMessages(Long userId) {
+    public List<MessageOutputDto> getSentMessages(Long userId) {
         List<Message> messages = messageRepository.findBySender_Id(userId);
         return messages.stream()
-                .map(this::toMessageDto)
+                .map(this::transferMessageToMessageOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public MessageDto createMessage(MessageDto messageDto) {
-        Message message = fromMessageDto(messageDto);
+    public MessageOutputDto createMessage(MessageInputDto messageDto) {
+        Message message = transferMessageInputDtoToMessage(messageDto);
         Message createdMessage = messageRepository.save(message);
-        return toMessageDto(createdMessage);
+        return transferMessageToMessageOutputDto(createdMessage);
     }
 
-    public MessageDto updateMessage(Long id, MessageDto messageDtoToUpdate) throws RecordNotFoundException {
+    public MessageOutputDto updateMessage(Long id, MessageInputDto messageDtoToUpdate) throws RecordNotFoundException {
         Message existingMessage = messageRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Message not found with id: " + id));
 
         // Update the fields of the existing message
-        BeanUtils.copyProperties(messageDtoToUpdate, existingMessage);
+        Message updatedMessage = updateMessageInputDtoToMessage(messageDtoToUpdate, existingMessage);
 
-        Message updatedMessage = messageRepository.save(existingMessage);
-        return toMessageDto(updatedMessage);
+        Message savedMessage = messageRepository.save(updatedMessage);
+        return transferMessageToMessageOutputDto(savedMessage);
     }
 
     public void deleteMessage(Long id) throws RecordNotFoundException {
@@ -79,8 +79,8 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public MessageDto sendMessageToUser(Long senderId, Long receiverId, MessageDto messageDto) throws RecordNotFoundException {
-        Message message = fromMessageDto(messageDto);
+    public MessageOutputDto sendMessageToUser(Long senderId, Long receiverId, MessageInputDto messageDto) throws RecordNotFoundException {
+        Message message = transferMessageInputDtoToMessage(messageDto);
         User sender = userRepository.findById(senderId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + senderId));
         User receiver = userRepository.findById(receiverId)
@@ -89,25 +89,25 @@ public class MessageService {
         message.setReceiver(receiver);
 
         Message createdMessage = messageRepository.save(message);
-        return toMessageDto(createdMessage);
+        return transferMessageToMessageOutputDto(createdMessage);
     }
 
-    public List<MessageDto> getMessagesFromStudyGroup(Long studyGroupId) {
+    public List<MessageOutputDto> getMessagesFromStudyGroup(Long studyGroupId) {
         List<Message> messages = messageRepository.findByStudyGroup_GroupId(studyGroupId);
         return messages.stream()
-                .map(this::toMessageDto)
+                .map(this::transferMessageToMessageOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public MessageDto createMessageInStudyGroup(Long studyGroupId, MessageDto messageDto) throws RecordNotFoundException {
+    public MessageOutputDto createMessageInStudyGroup(Long studyGroupId, MessageInputDto messageDto) throws RecordNotFoundException {
         StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
                 .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
 
-        Message message = fromMessageDto(messageDto);
+        Message message = transferMessageInputDtoToMessage(messageDto);
         message.setStudyGroup(studyGroup);
 
         Message createdMessage = messageRepository.save(message);
-        return toMessageDto(createdMessage);
+        return transferMessageToMessageOutputDto(createdMessage);
     }
 
     public void deleteMessageInStudyGroup(Long studyGroupId, Long messageId) throws RecordNotFoundException {
@@ -125,30 +125,68 @@ public class MessageService {
         }
     }
 
-    public MessageDto sendMessageToMessageBoard(Long senderId, Long studyGroupId, MessageDto messageDto) throws RecordNotFoundException {
+    public MessageOutputDto sendMessageToMessageBoard(Long senderId, Long studyGroupId, MessageInputDto messageDto) throws RecordNotFoundException {
         StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
                 .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
 
         User sender = userRepository.findById(senderId)
                 .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + senderId));
 
-        Message message = fromMessageDto(messageDto);
+        Message message = transferMessageInputDtoToMessage(messageDto);
         message.setSender(sender);
         message.setStudyGroup(studyGroup);
 
         Message createdMessage = messageRepository.save(message);
-        return toMessageDto(createdMessage);
+        return transferMessageToMessageOutputDto(createdMessage);
     }
 
-    private MessageDto toMessageDto(Message message) { /*Message to MessageDTO*/
-        MessageDto messageDto = new MessageDto();
-        BeanUtils.copyProperties(message, messageDto);
+    private MessageOutputDto transferMessageToMessageOutputDto(Message message) {
+        MessageOutputDto messageDto = new MessageOutputDto();
+        messageDto.setMessageId(message.getMessageId());
+        messageDto.setStudyGroup(message.getStudyGroup());
+        messageDto.setUser(message.getSender());
+        messageDto.setIsConcept(message.getIsConcept());
+        messageDto.setReceiverEmail(message.getReceiver().getEMail()); //Email nodig omdat je een string vraagt voor receiver.
+        messageDto.setParentMessage(message.getMessage());
         return messageDto;
     }
 
-    private Message fromMessageDto(MessageDto messageDto) { /*MessageDTO to Message*/
+    private Message transferMessageInputDtoToMessage(MessageInputDto messageDto) {
         Message message = new Message();
-        BeanUtils.copyProperties(messageDto, message);
+        if (messageDto.getStudyGroup()!=null) {
+            message.setStudyGroup(messageDto.getStudyGroup());
+        }
+        if (messageDto.getParentMessage()!=null) {
+            message.setParentMessage(messageDto.getParentMessage()); //ParentMessage wordt gebruikt voor de StudyGroyp denk ik....
+        }
+        if (messageDto.getSender()!=null) {
+            message.setSender(messageDto.getSender());
+        }
+        if (messageDto.getIsConcept()!=null) {
+            message.setIsConcept(messageDto.getIsConcept());
+        }
+        if (messageDto.getReceiverEmail()!=null) {
+            message.setReceiverEmail(messageDto.getReceiverEmail()); //De receiver wordt door een gebruiker zelf gekozen. Hoe werkt dit dan?
+        }
+        return message;
+    }
+
+    private Message updateMessageInputDtoToMessage(MessageInputDto messageDto, Message message) {
+        if (messageDto.getStudyGroup()!=null) {
+            message.setStudyGroup(messageDto.getStudyGroup());
+        }
+        if (messageDto.getParentMessage()!=null) {
+            message.setParentMessage(messageDto.getParentMessage());
+        }
+        if (messageDto.getSender()!=null) {
+            message.setSender(messageDto.getSender());
+        }
+        if (messageDto.getIsConcept()!=null) {
+            message.setIsConcept(messageDto.getIsConcept());
+        }
+        if (messageDto.getReceiverEmail()!=null) {
+            message.setReceiverEmail(messageDto.getReceiverEmail());
+        }
         return message;
     }
 }

@@ -1,10 +1,10 @@
 package com.digicoachindezorg.didz_backend.services;
 
-import com.digicoachindezorg.didz_backend.dtos.ProductDto;
+import com.digicoachindezorg.didz_backend.dtos.input.ProductInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.ProductOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,34 +19,34 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductDto> getAllProducts() {
+    public List<ProductOutputDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(this::toProductDto)
+                .map(this::transferProductToProductOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public ProductDto getProduct(Long id) throws RecordNotFoundException {
+    public ProductOutputDto getProduct(Long id) throws RecordNotFoundException {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Product not found with id: " + id));
-        return toProductDto(product);
+        return transferProductToProductOutputDto(product);
     }
 
-    public ProductDto createProduct(ProductDto productDto) {
-        Product product = fromProductDto(productDto);
+    public ProductOutputDto createProduct(ProductInputDto productDto) {
+        Product product = transferProductInputDtoToProduct(productDto);
         Product createdProduct = productRepository.save(product);
-        return toProductDto(createdProduct);
+        return transferProductToProductOutputDto(createdProduct);
     }
 
-    public ProductDto updateProduct(Long id, ProductDto productDtoToUpdate) throws RecordNotFoundException {
+    public ProductOutputDto updateProduct(Long id, ProductInputDto productDtoToUpdate) throws RecordNotFoundException {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Product not found with id: " + id));
 
         // Update the fields of the existing product
-        BeanUtils.copyProperties(productDtoToUpdate, existingProduct);
+        Product updatedProduct = updateProductInputDtoToProduct(productDtoToUpdate, existingProduct);
 
-        Product updatedProduct = productRepository.save(existingProduct);
-        return toProductDto(updatedProduct);
+        Product savedProduct = productRepository.save(updatedProduct);
+        return transferProductToProductOutputDto(savedProduct);
     }
 
     public void deleteProduct(Long id) throws RecordNotFoundException {
@@ -56,17 +56,62 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    private ProductDto toProductDto(Product product) {
-        ProductDto productDto = new ProductDto();
-        BeanUtils.copyProperties(product, productDto);
-        // Additional mapping for nested entities
+    private ProductOutputDto transferProductToProductOutputDto(Product product) {
+        ProductOutputDto productDto = new ProductOutputDto();
+        /*BeanUtils.copyProperties(productDto, product);*/
+        productDto.setProductId(product.getProductId()); //Alleen bij een outputDTO
+        productDto.setProductName(product.getProductName());
+        productDto.setReviews(product.getReviews());
+        productDto.setPrice(product.getPrice());
+        productDto.setProductType(product.getProductType());
+        productDto.setInvoice(product.getInvoice());
+        productDto.setStudyGroup(product.getStudyGroup());
         return productDto;
     }
 
-    private Product fromProductDto(ProductDto productDto) {
+    private Product transferProductInputDtoToProduct(ProductInputDto productDto) {
         Product product = new Product();
-        BeanUtils.copyProperties(productDto, product);
-        // Additional mapping for nested entities
+        /*BeanUtils.copyProperties(productDto, product); Did not work for Update*/
+        if (productDto.getProductName()!=null) {
+            product.setProductName(productDto.getProductName());
+        }
+        if (productDto.getReviews()!=null) {
+            product.setReviews(productDto.getReviews());
+        }
+        if (productDto.getPrice()!=null) {
+            product.setPrice(productDto.getPrice());
+        }
+        if (productDto.getProductType()!=null) {
+            product.setProductType(productDto.getProductType());
+        }
+        if (productDto.getInvoice()!=null) {
+            product.setInvoice(productDto.getInvoice());
+        }
+        if (productDto.getStudyGroup()!=null) {
+            product.setStudyGroup(productDto.getStudyGroup());
+        }
+        return product;
+    }
+
+    private Product updateProductInputDtoToProduct(ProductInputDto productDto, Product product) {
+        if (productDto.getProductName()!=null) {
+            product.setProductName(productDto.getProductName());
+        }
+        if (productDto.getReviews()!=null) {
+            product.setReviews(productDto.getReviews());
+        }
+        if (productDto.getPrice()!=null) {
+            product.setPrice(productDto.getPrice());
+        }
+        if (productDto.getProductType()!=null) {
+            product.setProductType(productDto.getProductType());
+        }
+        if (productDto.getInvoice()!=null) {
+            product.setInvoice(productDto.getInvoice());
+        }
+        if (productDto.getStudyGroup()!=null) {
+            product.setStudyGroup(productDto.getStudyGroup());
+        }
         return product;
     }
 }

@@ -1,7 +1,8 @@
 package com.digicoachindezorg.didz_backend.services;
 
-import com.digicoachindezorg.didz_backend.dtos.ReviewDto;
-import com.digicoachindezorg.didz_backend.dtos.UserDto;
+import com.digicoachindezorg.didz_backend.dtos.input.ReviewInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.ReviewOutputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.models.Review;
@@ -9,7 +10,6 @@ import com.digicoachindezorg.didz_backend.models.User;
 import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
 import com.digicoachindezorg.didz_backend.repositories.ReviewRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,43 +22,43 @@ public class ReviewService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    public ReviewService(ReviewRepository reviewRepository,ProductRepository productRepository, UserRepository userRepository) {
+    public ReviewService(ReviewRepository reviewRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
 
-    public List<ReviewDto> getAllReviewsPerProduct(Long productId) {
+    public List<ReviewOutputDto> getAllReviewsPerProduct(Long productId) {
         List<Review> reviews = reviewRepository.findAllByProductProductId(productId);
         return reviews.stream()
-                .map(this::toReviewDto)
+                .map(this::transferReviewToReviewOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public ReviewDto getReview(Long id) throws RecordNotFoundException {
+    public ReviewOutputDto getReview(Long id) throws RecordNotFoundException {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Review not found with id: " + id));
-        return toReviewDto(review);
+        return transferReviewToReviewOutputDto(review);
     }
 
-    public ReviewDto createReview(ReviewDto reviewDto) throws RecordNotFoundException {
-        Review review = fromReviewDto(reviewDto);
-        User customer = userRepository.findById(reviewDto.getCustomer().getId())
-                .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + reviewDto.getCustomer().getId()));
+    public ReviewOutputDto createReview(ReviewInputDto reviewInputDto) throws RecordNotFoundException {
+        Review review = transferReviewInputDtoToReview(reviewInputDto);
+        User customer = userRepository.findById(reviewInputDto.getCustomer().getId())
+                .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + reviewInputDto.getCustomer().getId()));
         review.setCustomer(customer);
         Review createdReview = reviewRepository.save(review);
-        return toReviewDto(createdReview);
+        return transferReviewToReviewOutputDto(createdReview);
     }
 
-    public ReviewDto updateReview(Long id, ReviewDto reviewDtoToUpdate) throws RecordNotFoundException {
+    public ReviewOutputDto updateReview(Long id, ReviewInputDto reviewInputDtoToUpdate) throws RecordNotFoundException {
         Review existingReview = reviewRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Review not found with id: " + id));
 
         // Update the fields of the existing review
-        BeanUtils.copyProperties(reviewDtoToUpdate, existingReview);
+        Review updatedReview = updateReviewInputDtoToReview(reviewInputDtoToUpdate, existingReview);
 
-        Review updatedReview = reviewRepository.save(existingReview);
-        return toReviewDto(updatedReview);
+        Review savedReview = reviewRepository.save(updatedReview);
+        return transferReviewToReviewOutputDto(savedReview);
     }
 
     public void deleteReview(Long id) throws RecordNotFoundException {
@@ -68,33 +68,93 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public ReviewDto createReviewForProduct(ReviewDto reviewDto, Long productId) throws RecordNotFoundException {
+    public ReviewOutputDto createReviewForProduct(ReviewInputDto reviewInputDto, Long productId) throws RecordNotFoundException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RecordNotFoundException("Product not found with id: " + productId));
 
-        Review review = fromReviewDto(reviewDto);
+        Review review = transferReviewInputDtoToReview(reviewInputDto);
         review.setProduct(product);
 
         Review createdReview = reviewRepository.save(review);
-        return toReviewDto(createdReview);
+        return transferReviewToReviewOutputDto(createdReview);
     }
 
-    private ReviewDto toReviewDto(Review review) {
-        ReviewDto reviewDto = new ReviewDto();
-        BeanUtils.copyProperties(review, reviewDto);
-        reviewDto.setCustomer(toUserDto(review.getCustomer()));
-        return reviewDto;
+    private ReviewOutputDto transferReviewToReviewOutputDto(Review review) {
+        ReviewOutputDto reviewOutputDto = new ReviewOutputDto();
+        reviewOutputDto.setCustomer(review.getCustomer());
+        reviewOutputDto.setReviewDescription(review.getReviewDescription());
+        reviewOutputDto.setReviewId(review.getReviewId());
+        reviewOutputDto.setProduct(review.getProduct());
+        reviewOutputDto.setScore(review.getScore());
+        reviewOutputDto.setDateOfWriting(review.getDateOfWriting());
+
+        reviewOutputDto.setCustomer(transferUserToUserOutputDto(review.getCustomer()));
+        return reviewOutputDto;
+    }
+    private UserOutputDto transferUserToUserOutputDto(User user) {
+        UserOutputDto userOutputDto = new UserOutputDto();
+        userOutputDto.setId(user.getId());
+        userOutputDto.setFullName(user.getFullName());
+        userOutputDto.setReviews(user.getReviews());
+        userOutputDto.setAddress(user.getAddress());
+        userOutputDto.setCompanyName(user.getCompanyName());
+        userOutputDto.setAvailability(user.getAvailability());
+        userOutputDto.setAuthority(user.getAuthority());
+        userOutputDto.setEMail(user.getEMail());
+        userOutputDto.setPhoneNumber(user.getPhoneNumber());
+        userOutputDto.setInvoices(user.getInvoices());
+        userOutputDto.setMessages(user.getReceivedMessages(), user.getSentMessages()); //Hoe kun je twee getters uitvoeren voor een waarde?
+        userOutputDto.setContactForms(user.getContactForms());
+        userOutputDto.setAuthority(user.getAuthority());
+        userOutputDto.setDateOfBirth(user.getDateOfBirth());
+        userOutputDto.setReviews(user.getReviews());
+        userOutputDto.setStudyGroups(user.getStudyGroups());
+        userOutputDto.setUsername(user.getUsername());
+        return userOutputDto;
     }
 
-    private Review fromReviewDto(ReviewDto reviewDto) {
+    private Review transferReviewInputDtoToReview(ReviewInputDto reviewInputDto) {
         Review review = new Review();
-        BeanUtils.copyProperties(reviewDto, review);
+        if (reviewInputDto.getCustomer()!=null) {
+            review.setCustomer(reviewInputDto.getCustomer());
+        }
+        if (reviewInputDto.getReviewDescription()!=null) {
+            review.setReviewDescription(reviewInputDto.getReviewDescription());
+        }
+        if (reviewInputDto.getProduct()!=null) {
+            review.setProduct(reviewInputDto.getProduct());
+        }
+        if (reviewInputDto.getScore()!=null) {
+            review.setScore(reviewInputDto.getScore());
+        }
+        if (reviewInputDto.getDateOfWriting()!=null) {
+            review.setDateOfWriting(reviewInputDto.getDateOfWriting());
+        }
+        if (reviewInputDto.getCustomer()!=null) {
+            review.setCustomer(transferUserToUserOutputDto(reviewInputDto.getCustomer()));
+        }
         return review;
     }
 
-    private UserDto toUserDto(User user) {
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(user, userDto);
-        return userDto;
+    private Review updateReviewInputDtoToReview(ReviewInputDto reviewInputDto, Review review) {
+        if (reviewInputDto.getCustomer()!=null) {
+            review.setCustomer(reviewInputDto.getCustomer());
+        }
+        if (reviewInputDto.getReviewDescription()!=null) {
+            review.setReviewDescription(reviewInputDto.getReviewDescription());
+        }
+        if (reviewInputDto.getProduct()!=null) {
+            review.setProduct(reviewInputDto.getProduct());
+        }
+        if (reviewInputDto.getScore()!=null) {
+            review.setScore(reviewInputDto.getScore());
+        }
+        if (reviewInputDto.getDateOfWriting()!=null) {
+            review.setDateOfWriting(reviewInputDto.getDateOfWriting());
+        }
+        if (reviewInputDto.getCustomer()!=null) {
+            review.setCustomer(transferUserToUserOutputDto(reviewInputDto.getCustomer()));
+        }
+        return review;
     }
 }

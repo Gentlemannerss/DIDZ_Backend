@@ -1,6 +1,7 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
-import com.digicoachindezorg.didz_backend.dtos.ContactFormDto;
+import com.digicoachindezorg.didz_backend.dtos.input.ContactFormInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.ContactFormOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.services.ContactFormService;
 import org.springframework.http.HttpStatus;
@@ -20,20 +21,20 @@ public class ContactFormController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ContactFormDto>> getAllContactForms() {
-        List<ContactFormDto> contactForms = contactFormService.getAllContactForms();
+    public ResponseEntity<List<ContactFormOutputDto>> getAllContactForms() {
+        List<ContactFormOutputDto> contactForms = contactFormService.getAllContactForms();
         return ResponseEntity.ok(contactForms);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ContactFormDto> getContactForm(@PathVariable Long id) {
-        ContactFormDto contactForm = contactFormService.getContactForm(id);
+    public ResponseEntity<ContactFormOutputDto> getContactForm(@PathVariable Long id) {
+        ContactFormOutputDto contactForm = contactFormService.getContactForm(id);
         return ResponseEntity.ok(contactForm);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ContactFormDto> updateContactForm(@PathVariable Long id, @RequestBody ContactFormDto contactFormDtoToUpdate) throws RecordNotFoundException {
-        ContactFormDto updatedContactForm = contactFormService.updateContactForm(id, contactFormDtoToUpdate);
+    public ResponseEntity<ContactFormOutputDto> updateContactForm(@PathVariable Long id, @RequestBody ContactFormInputDto contactFormDtoToUpdate) throws RecordNotFoundException {
+        ContactFormOutputDto updatedContactForm = contactFormService.updateContactForm(id, contactFormDtoToUpdate);
         return ResponseEntity.ok(updatedContactForm);
     }
 
@@ -44,8 +45,8 @@ public class ContactFormController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ContactFormDto> createContactForm(@RequestBody ContactFormDto contactFormDto) {
-        ContactFormDto createdContactForm = contactFormService.createContactForm(contactFormDto);
+    public ResponseEntity<ContactFormOutputDto> createContactForm(@RequestBody ContactFormInputDto contactFormDto) {
+        ContactFormOutputDto createdContactForm = contactFormService.createContactForm(contactFormDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdContactForm);
     }
 }

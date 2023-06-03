@@ -15,7 +15,7 @@ import lombok.Setter;
 public class ContactForm {
     @Id
     @GeneratedValue
-    private Integer contactFormId;
+    private Long contactFormId;
     private String companyName;
     private String name;
     private Integer phoneNumber;
