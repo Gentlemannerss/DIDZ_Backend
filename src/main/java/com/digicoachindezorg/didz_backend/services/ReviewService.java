@@ -88,7 +88,7 @@ public class ReviewService {
         reviewOutputDto.setScore(review.getScore());
         reviewOutputDto.setDateOfWriting(review.getDateOfWriting());
 
-        reviewOutputDto.setCustomer(transferUserToUserOutputDto(review.getCustomer()));
+        reviewOutputDto.setCustomer(transferUserToUserOutputDto(review.getCustomer())); //Dit geeft een foutmelding. Waar komt dit vandaan.
         return reviewOutputDto;
     }
     private UserOutputDto transferUserToUserOutputDto(User user) {
@@ -103,7 +103,7 @@ public class ReviewService {
         userOutputDto.setEMail(user.getEMail());
         userOutputDto.setPhoneNumber(user.getPhoneNumber());
         userOutputDto.setInvoices(user.getInvoices());
-        userOutputDto.setMessages(user.getReceivedMessages(), user.getSentMessages()); //Hoe kun je twee getters uitvoeren voor een waarde?
+        userOutputDto.setMessages(user.getReceivedMessages(), user.getSentMessages()); //Hoe kun je twee getters uitvoeren voor een waarde? of kan ik ze beter samenvoegen, of apart aanvragen.
         userOutputDto.setContactForms(user.getContactForms());
         userOutputDto.setAuthority(user.getAuthority());
         userOutputDto.setDateOfBirth(user.getDateOfBirth());
@@ -131,7 +131,7 @@ public class ReviewService {
             review.setDateOfWriting(reviewInputDto.getDateOfWriting());
         }
         if (reviewInputDto.getCustomer()!=null) {
-            review.setCustomer(transferUserToUserOutputDto(reviewInputDto.getCustomer()));
+            review.setCustomer(transferUserToUserOutputDto(reviewInputDto.getCustomer())); //Ook hier dezelfde fout
         }
         return review;
     }
@@ -153,7 +153,7 @@ public class ReviewService {
             review.setDateOfWriting(reviewInputDto.getDateOfWriting());
         }
         if (reviewInputDto.getCustomer()!=null) {
-            review.setCustomer(transferUserToUserOutputDto(reviewInputDto.getCustomer()));
+            review.setCustomer(transferUserToUserOutputDto(reviewInputDto.getCustomer())); //Ook hier dezelfde fout
         }
         return review;
     }

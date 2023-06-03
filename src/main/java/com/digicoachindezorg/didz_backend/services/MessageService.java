@@ -157,7 +157,7 @@ public class MessageService {
             message.setStudyGroup(messageDto.getStudyGroup());
         }
         if (messageDto.getParentMessage()!=null) {
-            message.setParentMessage(messageDto.getParentMessage()); //ParentMessage wordt gebruikt voor de StudyGroyp denk ik....
+            message.setParentMessage(messageDto.getParentMessage()); //ParentMessage wordt gebruikt voor de StudyGroyp denk ik.... Geen idee, wat moet ik hiermee doen?
         }
         if (messageDto.getSender()!=null) {
             message.setSender(messageDto.getSender());
@@ -166,7 +166,7 @@ public class MessageService {
             message.setIsConcept(messageDto.getIsConcept());
         }
         if (messageDto.getReceiverEmail()!=null) {
-            message.setReceiverEmail(messageDto.getReceiverEmail()); //De receiver wordt door een gebruiker zelf gekozen. Hoe werkt dit dan?
+            message.setReceiverEmail(messageDto.getReceiverEmail()); //De receiver wordt door een gebruiker zelf gekozen door een email in te vullen Hoe werkt dit dan?
         }
         return message;
     }
@@ -176,7 +176,7 @@ public class MessageService {
             message.setStudyGroup(messageDto.getStudyGroup());
         }
         if (messageDto.getParentMessage()!=null) {
-            message.setParentMessage(messageDto.getParentMessage());
+            message.setParentMessage(messageDto.getParentMessage()); //ParentMessage wordt gebruikt voor de StudyGroyp denk ik.... Geen idee, wat moet ik hiermee doen?
         }
         if (messageDto.getSender()!=null) {
             message.setSender(messageDto.getSender());
@@ -185,7 +185,7 @@ public class MessageService {
             message.setIsConcept(messageDto.getIsConcept());
         }
         if (messageDto.getReceiverEmail()!=null) {
-            message.setReceiverEmail(messageDto.getReceiverEmail());
+            message.setReceiverEmail(messageDto.getReceiverEmail()); //De receiver wordt door een gebruiker zelf gekozen door een email in te vullen Hoe werkt dit dan?
         }
         return message;
     }
