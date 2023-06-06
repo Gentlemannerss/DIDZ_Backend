@@ -16,6 +16,6 @@ public class ReviewOutputDto {
     private Integer score;
     private LocalDate dateOfWriting;
     private String reviewDescription;
-    private User customer;
+    private User customer; //Kan UserDto zijn, maar dit fck met je code.
     private Product product;
 }

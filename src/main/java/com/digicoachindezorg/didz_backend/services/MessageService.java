@@ -79,15 +79,8 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public MessageOutputDto sendMessageToUser(Long senderId, Long receiverId, MessageInputDto messageDto) throws RecordNotFoundException {
+    public MessageOutputDto sendMessageToUser(MessageInputDto messageDto) throws RecordNotFoundException {
         Message message = transferMessageInputDtoToMessage(messageDto);
-        User sender = userRepository.findById(senderId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + senderId));
-        User receiver = userRepository.findById(receiverId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + receiverId));
-        message.setSender(sender);
-        message.setReceiver(receiver);
-
         Message createdMessage = messageRepository.save(message);
         return transferMessageToMessageOutputDto(createdMessage);
     }
@@ -125,17 +118,8 @@ public class MessageService {
         }
     }
 
-    public MessageOutputDto sendMessageToMessageBoard(Long senderId, Long studyGroupId, MessageInputDto messageDto) throws RecordNotFoundException {
-        StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
-                .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
-
-        User sender = userRepository.findById(senderId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + senderId));
-
+    public MessageOutputDto sendMessageToMessageBoard(MessageInputDto messageDto) throws RecordNotFoundException {
         Message message = transferMessageInputDtoToMessage(messageDto);
-        message.setSender(sender);
-        message.setStudyGroup(studyGroup);
-
         Message createdMessage = messageRepository.save(message);
         return transferMessageToMessageOutputDto(createdMessage);
     }
@@ -146,46 +130,60 @@ public class MessageService {
         messageDto.setStudyGroup(message.getStudyGroup());
         messageDto.setUser(message.getSender());
         messageDto.setIsConcept(message.getIsConcept());
-        messageDto.setReceiverEmail(message.getReceiver().getEMail()); //Email nodig omdat je een string vraagt voor receiver.
-        messageDto.setParentMessage(message.getMessage());
+        User receiver = message.getReceiver();
+        if (receiver != null) {
+            messageDto.setReceiverEmail(receiver.getEMail());
+        }
+        /*messageDto.setReceiverEmail(message.getReceiver().getEMail()); //Email nodig omdat je een string vraagt voor receiver.*/
+        /*messageDto.setParentMessage(message.getMessage());*/
         return messageDto;
     }
 
     private Message transferMessageInputDtoToMessage(MessageInputDto messageDto) {
         Message message = new Message();
-        if (messageDto.getStudyGroup()!=null) {
-            message.setStudyGroup(messageDto.getStudyGroup());
+        if (messageDto.getStudyGroupId()!=null) {
+            StudyGroup studyGroup = studyGroupRepository.findById(messageDto.getStudyGroupId())
+                    .orElseThrow(() -> new RecordNotFoundException("Study Group not found with id: " + messageDto.getStudyGroupId()));
+            message.setStudyGroup(studyGroup);
         }
-        if (messageDto.getParentMessage()!=null) {
+        /*if (messageDto.getParentMessage()!=null) {
             message.setParentMessage(messageDto.getParentMessage()); //ParentMessage wordt gebruikt voor de StudyGroyp denk ik.... Geen idee, wat moet ik hiermee doen?
-        }
-        if (messageDto.getSender()!=null) {
-            message.setSender(messageDto.getSender());
+        }*/
+        if (messageDto.getSenderId()!=null) {
+            User user = userRepository.findById(messageDto.getSenderId())
+                    .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + messageDto.getSenderId()));
+            message.setSender(user);
         }
         if (messageDto.getIsConcept()!=null) {
             message.setIsConcept(messageDto.getIsConcept());
         }
         if (messageDto.getReceiverEmail()!=null) {
-            message.setReceiverEmail(messageDto.getReceiverEmail()); //De receiver wordt door een gebruiker zelf gekozen door een email in te vullen Hoe werkt dit dan?
+            User user = userRepository.findByeMail(messageDto.getReceiverEmail());
+            message.setReceiver(user);
         }
         return message;
     }
 
     private Message updateMessageInputDtoToMessage(MessageInputDto messageDto, Message message) {
-        if (messageDto.getStudyGroup()!=null) {
-            message.setStudyGroup(messageDto.getStudyGroup());
+        if (messageDto.getStudyGroupId()!=null) {
+            StudyGroup studyGroup = studyGroupRepository.findById(messageDto.getStudyGroupId())
+                    .orElseThrow(() -> new RecordNotFoundException("Study Group not found with id: " + messageDto.getStudyGroupId()));
+            message.setStudyGroup(studyGroup);
         }
-        if (messageDto.getParentMessage()!=null) {
+        /*if (messageDto.getParentMessage()!=null) {
             message.setParentMessage(messageDto.getParentMessage()); //ParentMessage wordt gebruikt voor de StudyGroyp denk ik.... Geen idee, wat moet ik hiermee doen?
-        }
-        if (messageDto.getSender()!=null) {
-            message.setSender(messageDto.getSender());
+        }*/
+        if (messageDto.getSenderId()!=null) {
+            User user = userRepository.findById(messageDto.getSenderId())
+                    .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + messageDto.getSenderId()));
+            message.setSender(user);
         }
         if (messageDto.getIsConcept()!=null) {
             message.setIsConcept(messageDto.getIsConcept());
         }
         if (messageDto.getReceiverEmail()!=null) {
-            message.setReceiverEmail(messageDto.getReceiverEmail()); //De receiver wordt door een gebruiker zelf gekozen door een email in te vullen Hoe werkt dit dan?
+            User user = userRepository.findByeMail(messageDto.getReceiverEmail());
+            message.setReceiver(user); //De receiver wordt door een gebruiker zelf gekozen door een email in te vullen Hoe werkt dit dan?
         }
         return message;
     }

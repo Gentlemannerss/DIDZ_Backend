@@ -22,7 +22,7 @@ public class Invoice {
     private LocalDate orderDate;
     private Double totalPrice;
     private String address;
-    private Double travelCost;
+    /*private Double travelCost; Dit is te lastig om te maken op het moment.*/
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

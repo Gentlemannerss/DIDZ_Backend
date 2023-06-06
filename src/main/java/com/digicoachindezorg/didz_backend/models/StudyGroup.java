@@ -19,6 +19,7 @@ public class StudyGroup {
     @Id
     @GeneratedValue
     private Long groupId;
+    private String groupName;
     @OneToOne
     private Product product;
     @ManyToMany

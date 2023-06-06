@@ -118,6 +118,7 @@ public class StudyGroupService {
     private StudyGroupOutputDto transferStudyGroupToStudyGroupOutputDto(StudyGroup studyGroup) {
         StudyGroupOutputDto studyGroupDto = new StudyGroupOutputDto();
         studyGroupDto.setGroupId(studyGroup.getGroupId());
+        studyGroupDto.setGroupName(studyGroup.getGroupName());
         studyGroupDto.setUsers(studyGroup.getUsers());
         studyGroupDto.setProduct(studyGroup.getProduct());
         studyGroupDto.setPinboardMessages(studyGroup.getMessageBoard());
@@ -126,6 +127,9 @@ public class StudyGroupService {
 
     private StudyGroup transferStudyGroupInputDtoToStudyGroup(StudyGroupInputDto studyGroupDto) {
         StudyGroup studyGroup = new StudyGroup();
+        if (studyGroupDto.getGroupName()!=null) {
+            studyGroup.setGroupName(studyGroupDto.getGroupName());
+        }
         if (studyGroupDto.getUsers()!=null) {
             studyGroup.setUsers(studyGroupDto.getUsers());
         }
@@ -139,6 +143,9 @@ public class StudyGroupService {
     }
 
     private StudyGroup updateStudyGroupInputDtoToStudyGroup(StudyGroupInputDto studyGroupDto, StudyGroup studyGroup) {
+        if (studyGroupDto.getGroupName()!=null) {
+            studyGroup.setGroupName(studyGroupDto.getGroupName());
+        }
         if (studyGroupDto.getUsers()!=null) {
             studyGroup.setUsers(studyGroupDto.getUsers());
         }

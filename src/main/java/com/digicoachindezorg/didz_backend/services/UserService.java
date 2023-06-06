@@ -91,7 +91,6 @@ public class UserService {
         UserOutputDto userDto = new UserOutputDto();
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
-        /*userDto.setPassword(); waar wordt het wachtwoord van de gebruiker opgevangen?*/
         userDto.setFullName(user.getFullName());
         userDto.setDateOfBirth(user.getDateOfBirth());
         userDto.setEMail(user.getEMail());
@@ -103,7 +102,7 @@ public class UserService {
         userDto.setInvoices(user.getInvoices());
         userDto.setStudyGroups(user.getStudyGroups());
         userDto.setReviews(user.getReviews());
-        userDto.setMessages(user.getReceivedMessages(), user.getSentMessages()); // Wat moet ik hier doen om beide messages op te vangen aan een message.
+        userDto.setMessages(user.getMessages()); // Wat moet ik hier doen om beide messages op te vangen aan een message.
         userDto.setContactForms(user.getContactForms());
         return userDto;
     }
@@ -147,9 +146,7 @@ public class UserService {
             user.setReviews(userDto.getReviews());
         }
         if (userDto.getMessages()!=null) {
-            user.setReceivedMessages(userDto.getMessages());
-            user.setSentMessages(userDto.getMessages());
-            /*OOK hier weer, wat moet ik doen met de received message en de sent message?*/
+            user.setMessages(userDto.getMessages());
         }
         if (userDto.getContactForms()!=null) {
             user.setContactForms(userDto.getContactForms());
@@ -195,9 +192,7 @@ public class UserService {
             user.setReviews(userDto.getReviews());
         }
         if (userDto.getMessages()!=null) {
-            user.setReceivedMessages(userDto.getMessages());
-            user.setSentMessages(userDto.getMessages());
-            /*OOK hier weer, wat moet ik doen met de received message en de sent message?*/
+            user.setMessages(userDto.getMessages());
         }
         if (userDto.getContactForms()!=null) {
             user.setContactForms(userDto.getContactForms());

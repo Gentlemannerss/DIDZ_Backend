@@ -1,6 +1,5 @@
 package com.digicoachindezorg.didz_backend.dtos.input;
 
-import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.models.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -18,12 +17,11 @@ public class InvoiceInputDto {
     @Size(min = 1, max = 100)
     public String address;
 
-    @NotNull
+    /*@NotNull
     @Positive
-    public Double travelCost;
+    public Double travelCost;*/
 
-    @NotNull
-    public List<Product> products;
+    public List<Long> productsID;
 
     @NotNull
     @Positive
@@ -45,6 +43,5 @@ public class InvoiceInputDto {
     @Size(max = 200)
     public String comments;
 
-    @NotNull
     public Boolean termsOfCondition;
 }

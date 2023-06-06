@@ -15,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class StudyGroupInputDto {
+    private String groupName;
     @Valid
     private Product product;
 

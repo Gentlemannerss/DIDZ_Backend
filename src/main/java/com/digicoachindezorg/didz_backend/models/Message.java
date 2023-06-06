@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "Messages")
+@Table(name = "messages")
 public class Message {
     @Id
     @GeneratedValue
@@ -21,13 +21,13 @@ public class Message {
     private String messageContent;
     private Boolean isConcept;
     @ManyToOne
-    private Message message;
-    @ManyToOne
     @JoinColumn(name = "sender_id") // Specify the join column name for the sender relationship
     private User sender;
-    @ManyToOne //Dit moet een ManyToMany relatie worden. Een Coach kan meerdere berichten versturen naar gebruikers.
+
+    @ManyToOne
     @JoinColumn(name = "receiver_id") // Specify the join column name for the receiver relationship
     private User receiver;
+
     @ManyToOne
     @JoinColumn(name = "studyGroup_id")
     private StudyGroup studyGroup;

@@ -2,7 +2,6 @@ package com.digicoachindezorg.didz_backend.services;
 
 import com.digicoachindezorg.didz_backend.dtos.input.ReviewInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.ReviewOutputDto;
-import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.models.Review;
@@ -88,29 +87,9 @@ public class ReviewService {
         reviewOutputDto.setScore(review.getScore());
         reviewOutputDto.setDateOfWriting(review.getDateOfWriting());
 
-        reviewOutputDto.setCustomer(transferUserToUserOutputDto(review.getCustomer())); //Dit geeft een foutmelding. Waar komt dit vandaan.
+        reviewOutputDto.setCustomer((review.getCustomer())); //Dit geeft een foutmelding. Waar komt dit vandaan.
+
         return reviewOutputDto;
-    }
-    private UserOutputDto transferUserToUserOutputDto(User user) {
-        UserOutputDto userOutputDto = new UserOutputDto();
-        userOutputDto.setId(user.getId());
-        userOutputDto.setFullName(user.getFullName());
-        userOutputDto.setReviews(user.getReviews());
-        userOutputDto.setAddress(user.getAddress());
-        userOutputDto.setCompanyName(user.getCompanyName());
-        userOutputDto.setAvailability(user.getAvailability());
-        userOutputDto.setAuthority(user.getAuthority());
-        userOutputDto.setEMail(user.getEMail());
-        userOutputDto.setPhoneNumber(user.getPhoneNumber());
-        userOutputDto.setInvoices(user.getInvoices());
-        userOutputDto.setMessages(user.getReceivedMessages(), user.getSentMessages()); //Hoe kun je twee getters uitvoeren voor een waarde? of kan ik ze beter samenvoegen, of apart aanvragen.
-        userOutputDto.setContactForms(user.getContactForms());
-        userOutputDto.setAuthority(user.getAuthority());
-        userOutputDto.setDateOfBirth(user.getDateOfBirth());
-        userOutputDto.setReviews(user.getReviews());
-        userOutputDto.setStudyGroups(user.getStudyGroups());
-        userOutputDto.setUsername(user.getUsername());
-        return userOutputDto;
     }
 
     private Review transferReviewInputDtoToReview(ReviewInputDto reviewInputDto) {
@@ -131,7 +110,7 @@ public class ReviewService {
             review.setDateOfWriting(reviewInputDto.getDateOfWriting());
         }
         if (reviewInputDto.getCustomer()!=null) {
-            review.setCustomer(transferUserToUserOutputDto(reviewInputDto.getCustomer())); //Ook hier dezelfde fout
+            review.setCustomer((reviewInputDto.getCustomer())); //Ook hier dezelfde fout
         }
         return review;
     }
@@ -153,7 +132,7 @@ public class ReviewService {
             review.setDateOfWriting(reviewInputDto.getDateOfWriting());
         }
         if (reviewInputDto.getCustomer()!=null) {
-            review.setCustomer(transferUserToUserOutputDto(reviewInputDto.getCustomer())); //Ook hier dezelfde fout
+            review.setCustomer((reviewInputDto.getCustomer())); //Wat wordt er terug gestuurd aan informatie.
         }
         return review;
     }

@@ -1,8 +1,5 @@
 package com.digicoachindezorg.didz_backend.dtos.input;
 
-import com.digicoachindezorg.didz_backend.models.Message;
-import com.digicoachindezorg.didz_backend.models.StudyGroup;
-import com.digicoachindezorg.didz_backend.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
@@ -14,10 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageInputDto {
+    private String messageContent;
     private Boolean isConcept;
-    private Message parentMessage;
-    private User sender;
-    private StudyGroup studyGroup;
+    private Long senderId;
+    private Long receiverId;
+    private Long studyGroupId;
     @Email
     private String receiverEmail;
 }

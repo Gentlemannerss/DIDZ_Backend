@@ -7,6 +7,7 @@ import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Invoice;
 import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
+import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
+    private final ProductRepository productRepository;
 
-    public InvoiceService(InvoiceRepository invoiceRepository) {
+    public InvoiceService(InvoiceRepository invoiceRepository, ProductRepository productRepository) {
         this.invoiceRepository = invoiceRepository;
+        this.productRepository = productRepository;
     }
 
     public InvoiceOutputDto getInvoice(Long invoiceId) throws RecordNotFoundException {
@@ -98,7 +101,7 @@ public class InvoiceService {
         invoiceDto.setOrderDate(LocalDate.now());
         invoiceDto.setTotalPrice(invoice.getTotalPrice());
         invoiceDto.setAddress(invoice.getAddress());
-        invoiceDto.setTravelCost(invoice.getTravelCost());
+        /*invoiceDto.setTravelCost(invoice.getTravelCost());*/
         invoiceDto.setUser(invoice.getUser());
         invoiceDto.setProducts(invoice.getProducts());
         invoiceDto.setAmountOfParticipants(invoice.getAmountOfParticipants());
@@ -118,14 +121,12 @@ public class InvoiceService {
             invoice.setAddress(invoiceDto.getAddress());
         }
         if (invoiceDto.getUser()!=null) {
-            invoice.setUser(invoiceDto.getUser());
+            invoice.setUser(invoiceDto.getUser()); //Maak deze methode zoals getProductsID, userRepos maar wel voor een ID, meegeven net zoals producten
         }
-        if (invoiceDto.getProducts()!=null) {
-            invoice.setProducts(invoiceDto.getProducts()); //een User zet zijn eigen producten in een invoice
+        if (invoiceDto.getProductsID()!=null) {
+            List<Product> products = productRepository.findAllById(invoiceDto.getProductsID()); //Nu haal ik de ID van producten op, en hiermee haal ik producten uit de database, en geef ik gelijk mee.
+            invoice.setProducts(products);
         }
-        /*
-            TotalPrice and TravelCost are handeld in the backend. Make a method for this!
-        */
         if (invoiceDto.getAmountOfParticipants()!=null) {
             invoice.setAmountOfParticipants(invoiceDto.getAmountOfParticipants());
         }
@@ -154,8 +155,9 @@ public class InvoiceService {
         if (invoiceDto.getUser()!=null) {
             invoice.setUser(invoiceDto.getUser());
         }
-        if (invoiceDto.getProducts()!=null) {
-            invoice.setProducts(invoiceDto.getProducts()); //een User zet zijn eigen producten in een invoice
+        if (invoiceDto.getProductsID()!=null) {
+            List<Product> products = productRepository.findAllById(invoiceDto.getProductsID());
+            invoice.setProducts(products);
         }
         if (invoiceDto.getAmountOfParticipants()!=null) {
             invoice.setAmountOfParticipants(invoiceDto.getAmountOfParticipants());

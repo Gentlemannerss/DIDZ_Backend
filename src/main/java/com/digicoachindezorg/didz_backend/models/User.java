@@ -38,11 +38,8 @@ public class User {
     @OneToOne(mappedBy = "customer")
     private Review reviews;
 
-    @OneToMany(mappedBy = "sender")
-    private List<Message> sentMessages;
-
     @OneToMany(mappedBy = "receiver")
-    private List<Message> receivedMessages;
+    private List<Message> messages;
 
     @OneToMany(mappedBy = "user")
     private List<ContactForm> contactForms;

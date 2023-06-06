@@ -1,7 +1,5 @@
-package com.digicoachindezorg.didz_backend.controllers;
+package com.digicoachindezorg.didz_backend.exceptions;
 
-import com.digicoachindezorg.didz_backend.exceptions.*;
-import com.digicoachindezorg.didz_backend.exceptions.IndexOutOfBoundsException; /*Test of het Java.Lang is of mijn eigen backend.Exception*/
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,7 +12,7 @@ public class ExceptionController {
     @ExceptionHandler(value = {
             RecordNotFoundException.class,
             AlreadyExistsException.class,
-            IndexOutOfBoundsException.class, //Welke IndexOutOfBounds moet ik hebben, die van java of die van mezelf?
+            IndexOutOfBoundsException.class,
             InvalidPasswordException.class,
             ToManyCharException.class
     })

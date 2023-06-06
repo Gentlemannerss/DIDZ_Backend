@@ -65,19 +65,20 @@ public class MessageController {
     }
 
     @PostMapping("/send/user/{senderId}/{receiverId}")
-    public ResponseEntity<MessageOutputDto> sendMessageToUser(@PathVariable("senderId") Long senderId,
-                                                              @PathVariable("receiverId") Long receiverId,
+    public ResponseEntity<MessageOutputDto> sendMessageToUser(/*@PathVariable("senderId") Long senderId,
+                                                              @PathVariable("receiverId") Long receiverId,*/
                                                               @RequestBody MessageInputDto messageDto) throws RecordNotFoundException {
-        MessageOutputDto sentMessage = messageService.sendMessageToUser(senderId, receiverId, messageDto);
+        MessageOutputDto sentMessage = messageService.sendMessageToUser(messageDto);
         return ResponseEntity.ok(sentMessage);
     }
 
     @PostMapping("/send/message-board/{studyGroupId}/{senderId}")
-    public ResponseEntity<MessageOutputDto> sendMessageToMessageBoard(@PathVariable("studyGroupId") Long studyGroupId,
-                                                                      @PathVariable("senderId") Long senderId,
+    public ResponseEntity<MessageOutputDto> sendMessageToMessageBoard(/*    Dit is beter om in een DTO te doen.
+                                                                        @PathVariable("studyGroupId") Long studyGroupId,
+                                                                        @PathVariable("senderId") Long senderId,*/
                                                                       @RequestBody MessageInputDto messageDto) {
         try {
-            MessageOutputDto sentMessage = messageService.sendMessageToMessageBoard(senderId, studyGroupId, messageDto);
+            MessageOutputDto sentMessage = messageService.sendMessageToMessageBoard(messageDto);
             return ResponseEntity.ok(sentMessage);
         } catch (RecordNotFoundException e) {
             return ResponseEntity.notFound().build();

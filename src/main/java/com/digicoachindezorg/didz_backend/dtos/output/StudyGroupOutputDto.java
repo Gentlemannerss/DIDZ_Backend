@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class StudyGroupOutputDto {
+    private String groupName;
     private Long groupId;
     private Product product;
     private List<User> users;
