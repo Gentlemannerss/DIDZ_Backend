@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,8 +22,10 @@ public class StudyGroup {
     private Long groupId;
     private String groupName;
     @OneToOne
+    @JsonIgnore
     private Product product;
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "studygroup_user",
             joinColumns = @JoinColumn(name = "studygroup_id"),

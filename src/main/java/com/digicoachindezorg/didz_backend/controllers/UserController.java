@@ -50,13 +50,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
-    @PostMapping("/{userId}/studyGroups/{studyGroupId}")
-    public ResponseEntity<Void> assignUserToStudyGroup(@PathVariable Long userId, @PathVariable Long studyGroupId) throws RecordNotFoundException {
-        userService.assignUserToStudyGroup(userId, studyGroupId);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{userId}/invoices/{invoiceId}")
+    @PutMapping("/{userId}/invoices/{invoiceId}")
     public ResponseEntity<Void> assignUserToInvoice(@PathVariable Long userId, @PathVariable Long invoiceId) throws RecordNotFoundException {
         userService.assignUserToInvoice(userId, invoiceId);
         return ResponseEntity.ok().build();

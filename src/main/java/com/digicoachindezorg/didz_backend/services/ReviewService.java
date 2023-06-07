@@ -11,6 +11,7 @@ import com.digicoachindezorg.didz_backend.repositories.ReviewRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +28,6 @@ public class ReviewService {
         this.userRepository = userRepository;
     }
 
-    public List<ReviewOutputDto> getAllReviewsPerProduct(Long productId) {
-        List<Review> reviews = reviewRepository.findAllByProductProductId(productId);
-        return reviews.stream()
-                .map(this::transferReviewToReviewOutputDto)
-                .collect(Collectors.toList());
-    }
 
     public ReviewOutputDto getReview(Long id) throws RecordNotFoundException {
         Review review = reviewRepository.findById(id)
@@ -42,9 +37,6 @@ public class ReviewService {
 
     public ReviewOutputDto createReview(ReviewInputDto reviewInputDto) throws RecordNotFoundException {
         Review review = transferReviewInputDtoToReview(reviewInputDto);
-        User customer = userRepository.findById(reviewInputDto.getCustomer().getId())
-                .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + reviewInputDto.getCustomer().getId()));
-        review.setCustomer(customer);
         Review createdReview = reviewRepository.save(review);
         return transferReviewToReviewOutputDto(createdReview);
     }
@@ -67,15 +59,11 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public ReviewOutputDto createReviewForProduct(ReviewInputDto reviewInputDto, Long productId) throws RecordNotFoundException {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RecordNotFoundException("Product not found with id: " + productId));
-
-        Review review = transferReviewInputDtoToReview(reviewInputDto);
-        review.setProduct(product);
-
-        Review createdReview = reviewRepository.save(review);
-        return transferReviewToReviewOutputDto(createdReview);
+    public List<ReviewOutputDto> getAllReviewsPerProduct(Long productId) {
+        List<Review> reviews = reviewRepository.findAllByProductProductId(productId);
+        return reviews.stream()
+                .map(this::transferReviewToReviewOutputDto)
+                .collect(Collectors.toList());
     }
 
     private ReviewOutputDto transferReviewToReviewOutputDto(Review review) {
@@ -87,52 +75,51 @@ public class ReviewService {
         reviewOutputDto.setScore(review.getScore());
         reviewOutputDto.setDateOfWriting(review.getDateOfWriting());
 
-        reviewOutputDto.setCustomer((review.getCustomer())); //Dit geeft een foutmelding. Waar komt dit vandaan.
+        reviewOutputDto.setCustomer((review.getCustomer()));
 
         return reviewOutputDto;
     }
 
     private Review transferReviewInputDtoToReview(ReviewInputDto reviewInputDto) {
         Review review = new Review();
-        if (reviewInputDto.getCustomer()!=null) {
-            review.setCustomer(reviewInputDto.getCustomer());
+        if (reviewInputDto.getCustomerId()!=null) {
+            User customer = userRepository.findById(reviewInputDto.getCustomerId())
+                    .orElseThrow(() -> new RecordNotFoundException("User is not found with id: " + reviewInputDto.getCustomerId()));
+            review.setCustomer(customer);
         }
         if (reviewInputDto.getReviewDescription()!=null) {
             review.setReviewDescription(reviewInputDto.getReviewDescription());
         }
-        if (reviewInputDto.getProduct()!=null) {
-            review.setProduct(reviewInputDto.getProduct());
+        if (reviewInputDto.getProductId()!=null) {
+            Product product = productRepository.findById(reviewInputDto.getProductId())
+                    .orElseThrow(() -> new RecordNotFoundException("Product is not found with id: " + reviewInputDto.getProductId()));
+            review.setProduct(product);
         }
         if (reviewInputDto.getScore()!=null) {
             review.setScore(reviewInputDto.getScore());
         }
-        if (reviewInputDto.getDateOfWriting()!=null) {
-            review.setDateOfWriting(reviewInputDto.getDateOfWriting());
-        }
-        if (reviewInputDto.getCustomer()!=null) {
-            review.setCustomer((reviewInputDto.getCustomer())); //Ook hier dezelfde fout
-        }
+
+        review.setDateOfWriting(LocalDate.now());
+
         return review;
     }
 
     private Review updateReviewInputDtoToReview(ReviewInputDto reviewInputDto, Review review) {
-        if (reviewInputDto.getCustomer()!=null) {
-            review.setCustomer(reviewInputDto.getCustomer());
+        if (reviewInputDto.getCustomerId()!=null) {
+            User customer = userRepository.findById(reviewInputDto.getCustomerId())
+                    .orElseThrow(() -> new RecordNotFoundException("User is not found with id: " + reviewInputDto.getCustomerId()));
+            review.setCustomer(customer);
         }
         if (reviewInputDto.getReviewDescription()!=null) {
             review.setReviewDescription(reviewInputDto.getReviewDescription());
         }
-        if (reviewInputDto.getProduct()!=null) {
-            review.setProduct(reviewInputDto.getProduct());
+        if (reviewInputDto.getProductId()!=null) {
+            Product product = productRepository.findById(reviewInputDto.getProductId())
+                    .orElseThrow(() -> new RecordNotFoundException("Product is not found with id: " + reviewInputDto.getProductId()));
+            review.setProduct(product);
         }
         if (reviewInputDto.getScore()!=null) {
             review.setScore(reviewInputDto.getScore());
-        }
-        if (reviewInputDto.getDateOfWriting()!=null) {
-            review.setDateOfWriting(reviewInputDto.getDateOfWriting());
-        }
-        if (reviewInputDto.getCustomer()!=null) {
-            review.setCustomer((reviewInputDto.getCustomer())); //Wat wordt er terug gestuurd aan informatie.
         }
         return review;
     }

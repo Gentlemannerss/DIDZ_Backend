@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,14 +22,17 @@ public class Message {
     private String messageContent;
     private Boolean isConcept;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "sender_id") // Specify the join column name for the sender relationship
     private User sender;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "receiver_id") // Specify the join column name for the receiver relationship
     private User receiver;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "studyGroup_id")
     private StudyGroup studyGroup;
     private LocalDate date;

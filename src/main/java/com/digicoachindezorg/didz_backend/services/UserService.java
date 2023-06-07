@@ -4,10 +4,8 @@ import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Invoice;
-import com.digicoachindezorg.didz_backend.models.StudyGroup;
 import com.digicoachindezorg.didz_backend.models.User;
 import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
-import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +17,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final InvoiceRepository invoiceRepository;
-    private final StudyGroupRepository studyGroupRepository;
 
-    public UserService(UserRepository userRepository, InvoiceRepository invoiceRepository, StudyGroupRepository studyGroupRepository) {
+    public UserService(UserRepository userRepository, InvoiceRepository invoiceRepository) {
         this.userRepository = userRepository;
         this.invoiceRepository = invoiceRepository;
-        this.studyGroupRepository = studyGroupRepository;
     }
 
     public List<UserOutputDto> getAllUsers() {
@@ -62,17 +58,6 @@ public class UserService {
             throw new RecordNotFoundException("User not found with id: " + id);
         }
         userRepository.deleteById(id);
-    }
-
-    public void assignUserToStudyGroup(Long userId, Long studyGroupId) throws RecordNotFoundException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + userId));
-
-        StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
-                .orElseThrow(() -> new RecordNotFoundException("Study Group not found with id: " + studyGroupId));
-
-        user.getStudyGroups().add(studyGroup);
-        userRepository.save(user);
     }
 
     public void assignUserToInvoice(Long userId, Long invoiceId) throws RecordNotFoundException {

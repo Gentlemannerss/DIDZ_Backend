@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -33,17 +34,22 @@ public class User {
     private Integer phoneNumber;
 
     @ManyToMany(mappedBy = "users")
+    @JsonIgnore
     private List<StudyGroup> studyGroups;
 
     @OneToOne(mappedBy = "customer")
+    @JsonIgnore
     private Review reviews;
 
     @OneToMany(mappedBy = "receiver")
+    @JsonIgnore
     private List<Message> messages;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<ContactForm> contactForms;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Invoice> invoices;
 }

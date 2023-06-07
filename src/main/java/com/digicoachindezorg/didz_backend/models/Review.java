@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +23,10 @@ public class Review {
     private LocalDate dateOfWriting;
     private String reviewDescription;
     @OneToOne
+    @JsonIgnore
     private User customer; // Hier de rol van User<rol customer> opvangen dus UserClass
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "product_id")
     private Product product;
 }

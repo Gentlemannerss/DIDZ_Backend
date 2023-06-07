@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,12 +22,15 @@ public class Product {
     private String productName;
     private Double price;
     @OneToMany(mappedBy = "product")
-    private List<Review> reviews; //Alles met een List doen in plaats van een ArrayList
+    @JsonIgnore
+    private List<Review> reviews;
     @Enumerated
     private ProductType productType;
     @OneToOne(mappedBy = "product")
+    @JsonIgnore
     private StudyGroup studyGroup;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 

@@ -6,8 +6,10 @@ import com.digicoachindezorg.didz_backend.dtos.output.InvoiceOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Invoice;
 import com.digicoachindezorg.didz_backend.models.Product;
+import com.digicoachindezorg.didz_backend.models.User;
 import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
 import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
+import com.digicoachindezorg.didz_backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,11 +20,13 @@ import java.util.stream.Collectors;
 public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
+    private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-    public InvoiceService(InvoiceRepository invoiceRepository, ProductRepository productRepository) {
+    public InvoiceService(InvoiceRepository invoiceRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.invoiceRepository = invoiceRepository;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     public InvoiceOutputDto getInvoice(Long invoiceId) throws RecordNotFoundException {
@@ -42,6 +46,8 @@ public class InvoiceService {
         Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceDto);
         invoice.setOrderDate(LocalDate.now());
 
+        //Iemand die een invoice aanmaakt, geeft gegevens in voor een automatische user. Wat moet ik hiervoor doen?
+
         // Calculate total product price
         calculateTotalProductPrice(invoice);
 
@@ -51,6 +57,7 @@ public class InvoiceService {
 
     private void calculateTotalProductPrice(Invoice invoice) {
         List<Product> products = invoice.getProducts();
+        System.out.println(products);
         int amountOfParticipants = invoice.getAmountOfParticipants();
 
         double totalProductPrice = 0.0;
@@ -76,13 +83,6 @@ public class InvoiceService {
 
     public List<InvoiceOutputDto> getInvoicesByUserId(Long userId) {
         List<Invoice> invoices = invoiceRepository.findByUserUserId(userId);
-        return invoices.stream()
-                .map(this::transferInvoiceToInvoiceOutputDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<InvoiceOutputDto> getAllInvoicesByUserId(Long userId) {
-        List<Invoice> invoices = invoiceRepository.findAllByUserUserId(userId);
         return invoices.stream()
                 .map(this::transferInvoiceToInvoiceOutputDto)
                 .collect(Collectors.toList());
@@ -120,11 +120,14 @@ public class InvoiceService {
         if (invoiceDto.getAddress()!=null) {
             invoice.setAddress(invoiceDto.getAddress());
         }
-        if (invoiceDto.getUser()!=null) {
-            invoice.setUser(invoiceDto.getUser()); //Maak deze methode zoals getProductsID, userRepos maar wel voor een ID, meegeven net zoals producten
+        if (invoiceDto.getUserId()!=null) {
+            User user = userRepository.findById(invoiceDto.getUserId())
+                    .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + invoiceDto.getUserId()));
+            invoice.setUser(user); //Maak deze methode zoals getProductsID, userRepos maar wel voor een ID, meegeven net zoals producten
         }
-        if (invoiceDto.getProductsID()!=null) {
-            List<Product> products = productRepository.findAllById(invoiceDto.getProductsID()); //Nu haal ik de ID van producten op, en hiermee haal ik producten uit de database, en geef ik gelijk mee.
+        if (invoiceDto.getProductsId()!=null) {
+            List<Product> products = productRepository.findAllById(invoiceDto.getProductsId()); //Nu haal ik de ID van producten op, en hiermee haal ik producten uit de database, en geef ik gelijk mee.
+            System.out.println(products);
             invoice.setProducts(products);
         }
         if (invoiceDto.getAmountOfParticipants()!=null) {
@@ -152,11 +155,13 @@ public class InvoiceService {
         if (invoiceDto.getAddress()!=null) {
             invoice.setAddress(invoiceDto.getAddress());
         }
-        if (invoiceDto.getUser()!=null) {
-            invoice.setUser(invoiceDto.getUser());
+        if (invoiceDto.getUserId()!=null) {
+            User user = userRepository.findById(invoiceDto.getUserId())
+                    .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + invoiceDto.getUserId()));
+            invoice.setUser(user);
         }
-        if (invoiceDto.getProductsID()!=null) {
-            List<Product> products = productRepository.findAllById(invoiceDto.getProductsID());
+        if (invoiceDto.getProductsId()!=null) {
+            List<Product> products = productRepository.findAllById(invoiceDto.getProductsId());
             invoice.setProducts(products);
         }
         if (invoiceDto.getAmountOfParticipants()!=null) {

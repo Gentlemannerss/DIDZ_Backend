@@ -50,9 +50,4 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/product/{productId}")
-    public ResponseEntity<ReviewOutputDto> createReviewForProduct(@RequestBody ReviewInputDto reviewInputDto, @PathVariable Long productId) throws RecordNotFoundException {
-        ReviewOutputDto createdReview = reviewService.createReviewForProduct(reviewInputDto, productId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
-    }
 }

@@ -31,12 +31,6 @@ public class InvoiceController {
         List<InvoiceOutputDto> invoices = invoiceService.getInvoicesByUserId(userId);
         return new ResponseEntity<>(invoices, HttpStatus.OK);
     }
-    /*Doen deze twee niet exact hetzelfde?*/
-    @GetMapping("/user/{userId}/all")
-    public ResponseEntity<List<InvoiceOutputDto>> getAllInvoicesByUserId(@PathVariable("userId") Long userId) {
-        List<InvoiceOutputDto> invoices = invoiceService.getAllInvoicesByUserId(userId);
-        return new ResponseEntity<>(invoices, HttpStatus.OK);
-    }
 
     @GetMapping
     public ResponseEntity<List<InvoiceOutputDto>> getAllInvoices() {

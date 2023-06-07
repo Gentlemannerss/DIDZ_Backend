@@ -21,7 +21,7 @@ public class InvoiceInputDto {
     @Positive
     public Double travelCost;*/
 
-    public List<Long> productsID;
+    public List<Long> productsId;
 
     @NotNull
     @Positive
@@ -38,7 +38,7 @@ public class InvoiceInputDto {
     @Positive
     public Double totalPrice;
 
-    public User user;
+    public Long userId;
 
     @Size(max = 200)
     public String comments;

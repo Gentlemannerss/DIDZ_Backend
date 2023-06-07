@@ -4,8 +4,10 @@ import com.digicoachindezorg.didz_backend.dtos.input.StudyGroupInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.StudyGroupOutputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
+import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.models.StudyGroup;
 import com.digicoachindezorg.didz_backend.models.User;
+import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
 import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ import java.util.stream.Collectors;
 public class StudyGroupService {
 
     private final StudyGroupRepository studyGroupRepository;
+    private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    public StudyGroupService(StudyGroupRepository studyGroupRepository, UserRepository userRepository) {
+    public StudyGroupService(StudyGroupRepository studyGroupRepository, UserRepository userRepository, ProductRepository productRepository) {
         this.studyGroupRepository = studyGroupRepository;
+        this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
 
@@ -85,6 +89,7 @@ public class StudyGroupService {
         return transferStudyGroupToStudyGroupOutputDto(updatedStudyGroup);
     }
 
+
     public List<UserOutputDto> getStudyGroupUsers(Long studyGroupId) throws RecordNotFoundException {
         StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
                 .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
@@ -94,7 +99,6 @@ public class StudyGroupService {
                     UserOutputDto userOutputDto = new UserOutputDto();
                     userOutputDto.setId(user.getId());
                     userOutputDto.setUsername(user.getUsername());
-                    /*userOutputDto.setPassword(user.getPassword()); Je wil natuurlijk niks met het password doen.*/
                     userOutputDto.setFullName(user.getFullName());
                     userOutputDto.setEMail(user.getEMail());
                     userOutputDto.setDateOfBirth(user.getDateOfBirth());
@@ -130,14 +134,14 @@ public class StudyGroupService {
         if (studyGroupDto.getGroupName()!=null) {
             studyGroup.setGroupName(studyGroupDto.getGroupName());
         }
-        if (studyGroupDto.getUsers()!=null) {
-            studyGroup.setUsers(studyGroupDto.getUsers());
+        if (studyGroupDto.getUserIds()!=null) {
+            List<User> users = userRepository.findAllById(studyGroupDto.getUserIds());
+            studyGroup.setUsers(users);
         }
-        if (studyGroupDto.getProduct()!=null) {
-            studyGroup.setProduct(studyGroupDto.getProduct());
-        }
-        if (studyGroupDto.getPinboardMessages()!=null) {
-            studyGroup.setMessageBoard(studyGroupDto.getPinboardMessages());
+        if (studyGroupDto.getProductId()!=null) {
+            Product product = productRepository.findById(studyGroupDto.getProductId())
+                    .orElseThrow(() -> new RecordNotFoundException("Product not found with id: " + studyGroupDto.getProductId()));
+            studyGroup.setProduct(product);
         }
         return studyGroup;
     }
@@ -146,14 +150,14 @@ public class StudyGroupService {
         if (studyGroupDto.getGroupName()!=null) {
             studyGroup.setGroupName(studyGroupDto.getGroupName());
         }
-        if (studyGroupDto.getUsers()!=null) {
-            studyGroup.setUsers(studyGroupDto.getUsers());
+        if (studyGroupDto.getUserIds()!=null) {
+            List<User> users = userRepository.findAllById(studyGroupDto.getUserIds());
+            studyGroup.setUsers(users);
         }
-        if (studyGroupDto.getProduct()!=null) {
-            studyGroup.setProduct(studyGroupDto.getProduct());
-        }
-        if (studyGroupDto.getPinboardMessages()!=null) {
-            studyGroup.setMessageBoard(studyGroupDto.getPinboardMessages());
+        if (studyGroupDto.getProductId()!=null) {
+            Product product = productRepository.findById(studyGroupDto.getProductId())
+                    .orElseThrow(() -> new RecordNotFoundException("Product not found with id: " + studyGroupDto.getProductId()));
+            studyGroup.setProduct(product);
         }
         return studyGroup;
     }

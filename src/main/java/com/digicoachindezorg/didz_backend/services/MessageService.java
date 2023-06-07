@@ -79,11 +79,6 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public MessageOutputDto sendMessageToUser(MessageInputDto messageDto) throws RecordNotFoundException {
-        Message message = transferMessageInputDtoToMessage(messageDto);
-        Message createdMessage = messageRepository.save(message);
-        return transferMessageToMessageOutputDto(createdMessage);
-    }
 
     public List<MessageOutputDto> getMessagesFromStudyGroup(Long studyGroupId) {
         List<Message> messages = messageRepository.findByStudyGroup_GroupId(studyGroupId);
@@ -92,40 +87,9 @@ public class MessageService {
                 .collect(Collectors.toList());
     }
 
-    public MessageOutputDto createMessageInStudyGroup(Long studyGroupId, MessageInputDto messageDto) throws RecordNotFoundException {
-        StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
-                .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
-
-        Message message = transferMessageInputDtoToMessage(messageDto);
-        message.setStudyGroup(studyGroup);
-
-        Message createdMessage = messageRepository.save(message);
-        return transferMessageToMessageOutputDto(createdMessage);
-    }
-
-    public void deleteMessageInStudyGroup(Long studyGroupId, Long messageId) throws RecordNotFoundException {
-        StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
-                .orElseThrow(() -> new RecordNotFoundException("Study group not found with id: " + studyGroupId));
-
-        Message message = messageRepository.findById(messageId)
-                .orElseThrow(() -> new RecordNotFoundException("Message not found with id: " + messageId));
-
-        if (message.getStudyGroup() != null && message.getStudyGroup().equals(studyGroup)) {
-            studyGroup.getMessageBoard().remove(message);
-            messageRepository.delete(message);
-        } else {
-            throw new RecordNotFoundException("Message not found in the specified study group");
-        }
-    }
-
-    public MessageOutputDto sendMessageToMessageBoard(MessageInputDto messageDto) throws RecordNotFoundException {
-        Message message = transferMessageInputDtoToMessage(messageDto);
-        Message createdMessage = messageRepository.save(message);
-        return transferMessageToMessageOutputDto(createdMessage);
-    }
-
     private MessageOutputDto transferMessageToMessageOutputDto(Message message) {
         MessageOutputDto messageDto = new MessageOutputDto();
+        messageDto.setMessageContent(message.getMessageContent());
         messageDto.setMessageId(message.getMessageId());
         messageDto.setStudyGroup(message.getStudyGroup());
         messageDto.setUser(message.getSender());
@@ -134,21 +98,19 @@ public class MessageService {
         if (receiver != null) {
             messageDto.setReceiverEmail(receiver.getEMail());
         }
-        /*messageDto.setReceiverEmail(message.getReceiver().getEMail()); //Email nodig omdat je een string vraagt voor receiver.*/
-        /*messageDto.setParentMessage(message.getMessage());*/
         return messageDto;
     }
 
     private Message transferMessageInputDtoToMessage(MessageInputDto messageDto) {
         Message message = new Message();
+        if (messageDto.getMessageContent()!=null) {
+            message.setMessageContent(messageDto.getMessageContent());
+        }
         if (messageDto.getStudyGroupId()!=null) {
             StudyGroup studyGroup = studyGroupRepository.findById(messageDto.getStudyGroupId())
                     .orElseThrow(() -> new RecordNotFoundException("Study Group not found with id: " + messageDto.getStudyGroupId()));
             message.setStudyGroup(studyGroup);
         }
-        /*if (messageDto.getParentMessage()!=null) {
-            message.setParentMessage(messageDto.getParentMessage()); //ParentMessage wordt gebruikt voor de StudyGroyp denk ik.... Geen idee, wat moet ik hiermee doen?
-        }*/
         if (messageDto.getSenderId()!=null) {
             User user = userRepository.findById(messageDto.getSenderId())
                     .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + messageDto.getSenderId()));
@@ -165,14 +127,14 @@ public class MessageService {
     }
 
     private Message updateMessageInputDtoToMessage(MessageInputDto messageDto, Message message) {
+        if (messageDto.getMessageContent()!=null) {
+            message.setMessageContent(messageDto.getMessageContent());
+        }
         if (messageDto.getStudyGroupId()!=null) {
             StudyGroup studyGroup = studyGroupRepository.findById(messageDto.getStudyGroupId())
                     .orElseThrow(() -> new RecordNotFoundException("Study Group not found with id: " + messageDto.getStudyGroupId()));
             message.setStudyGroup(studyGroup);
         }
-        /*if (messageDto.getParentMessage()!=null) {
-            message.setParentMessage(messageDto.getParentMessage()); //ParentMessage wordt gebruikt voor de StudyGroyp denk ik.... Geen idee, wat moet ik hiermee doen?
-        }*/
         if (messageDto.getSenderId()!=null) {
             User user = userRepository.findById(messageDto.getSenderId())
                     .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + messageDto.getSenderId()));
