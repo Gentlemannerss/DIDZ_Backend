@@ -54,7 +54,6 @@ public class ProductService {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Product not found with id: " + id));
 
-        // Update the fields of the existing product
         Product updatedProduct = updateProductInputDtoToProduct(productDtoToUpdate, existingProduct);
 
         Product savedProduct = productRepository.save(updatedProduct);
@@ -70,8 +69,7 @@ public class ProductService {
 
     private ProductOutputDto transferProductToProductOutputDto(Product product) {
         ProductOutputDto productDto = new ProductOutputDto();
-        /*BeanUtils.copyProperties(productDto, product);*/
-        productDto.setProductId(product.getProductId()); //Alleen bij een outputDTO
+        productDto.setProductId(product.getProductId());
         productDto.setProductName(product.getProductName());
         productDto.setReviews(product.getReviews());
         productDto.setPrice(product.getPrice());
@@ -83,7 +81,6 @@ public class ProductService {
 
     private Product transferProductInputDtoToProduct(ProductInputDto productDto) {
         Product product = new Product();
-        /*BeanUtils.copyProperties(productDto, product); Did not work for Update*/
         if (productDto.getProductName()!=null) {
             product.setProductName(productDto.getProductName());
         }

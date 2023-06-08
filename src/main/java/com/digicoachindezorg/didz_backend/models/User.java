@@ -29,7 +29,7 @@ public class User {
     private LocalDate dateOfBirth;
     private String address;
     private String authority;
-    /*private LocalDate availability;*/
+    /*private LocalDate availability; Deze wordt pas toegevoegd wanneer de agenda nodig is voor een afspraak.*/
     private String companyName;
     private Integer phoneNumber;
 

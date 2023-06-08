@@ -145,7 +145,7 @@ public class MessageService {
         }
         if (messageDto.getReceiverEmail()!=null) {
             User user = userRepository.findByeMail(messageDto.getReceiverEmail());
-            message.setReceiver(user); //De receiver wordt door een gebruiker zelf gekozen door een email in te vullen Hoe werkt dit dan?
+            message.setReceiver(user);
         }
         return message;
     }

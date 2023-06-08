@@ -25,6 +25,6 @@ public class ContactForm {
     private Boolean termsOfCondition;
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "user_id") // Add join column
+    @JoinColumn(name = "user_id")
     private User user;
 }

@@ -37,3 +37,10 @@ public class Invoice {
     private Boolean termsOfCondition;
 
 }
+
+/*  Toevoegen:
+    Name
+    Email
+    CompanyName
+    Description
+*/

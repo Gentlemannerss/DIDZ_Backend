@@ -24,7 +24,7 @@ public class Review {
     private String reviewDescription;
     @OneToOne
     @JsonIgnore
-    private User customer; // Hier de rol van User<rol customer> opvangen dus UserClass
+    private User customer;
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "product_id")
