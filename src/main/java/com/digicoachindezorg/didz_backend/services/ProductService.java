@@ -3,8 +3,14 @@ package com.digicoachindezorg.didz_backend.services;
 import com.digicoachindezorg.didz_backend.dtos.input.ProductInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.ProductOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
+import com.digicoachindezorg.didz_backend.models.Invoice;
 import com.digicoachindezorg.didz_backend.models.Product;
+import com.digicoachindezorg.didz_backend.models.Review;
+import com.digicoachindezorg.didz_backend.models.StudyGroup;
+import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
 import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
+import com.digicoachindezorg.didz_backend.repositories.ReviewRepository;
+import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +20,15 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final StudyGroupRepository studyGroupRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ReviewRepository reviewRepository, InvoiceRepository invoiceRepository, StudyGroupRepository studyGroupRepository) {
         this.productRepository = productRepository;
+        this.reviewRepository = reviewRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.studyGroupRepository = studyGroupRepository;
     }
 
     public List<ProductOutputDto> getAllProducts() {
@@ -75,8 +87,9 @@ public class ProductService {
         if (productDto.getProductName()!=null) {
             product.setProductName(productDto.getProductName());
         }
-        if (productDto.getReviews()!=null) {
-            product.setReviews(productDto.getReviews());
+        if (productDto.getReviewIds()!=null) {
+            List <Review> reviews = reviewRepository.findAllById(productDto.getReviewIds());
+            product.setReviews(reviews);
         }
         if (productDto.getPrice()!=null) {
             product.setPrice(productDto.getPrice());
@@ -84,11 +97,15 @@ public class ProductService {
         if (productDto.getProductType()!=null) {
             product.setProductType(productDto.getProductType());
         }
-        if (productDto.getInvoice()!=null) {
-            product.setInvoice(productDto.getInvoice());
+        if (productDto.getInvoiceId()!=null) {
+            Invoice invoice = invoiceRepository.findById(productDto.getInvoiceId())
+                    .orElseThrow(() -> new RecordNotFoundException("Invoice not found with id: " + productDto.getInvoiceId()));
+            product.setInvoice(invoice);
         }
-        if (productDto.getStudyGroup()!=null) {
-            product.setStudyGroup(productDto.getStudyGroup());
+        if (productDto.getStudyGroupId()!=null) {
+            StudyGroup studyGroup = studyGroupRepository.findById(productDto.getStudyGroupId())
+                    .orElseThrow(() -> new RecordNotFoundException("StudyGroup not found with id: " + productDto.getStudyGroupId()));
+            product.setStudyGroup(studyGroup);
         }
         return product;
     }
@@ -97,8 +114,9 @@ public class ProductService {
         if (productDto.getProductName()!=null) {
             product.setProductName(productDto.getProductName());
         }
-        if (productDto.getReviews()!=null) {
-            product.setReviews(productDto.getReviews());
+        if (productDto.getReviewIds()!=null) {
+            List <Review> reviews = reviewRepository.findAllById(productDto.getReviewIds());
+            product.setReviews(reviews);
         }
         if (productDto.getPrice()!=null) {
             product.setPrice(productDto.getPrice());
@@ -106,11 +124,15 @@ public class ProductService {
         if (productDto.getProductType()!=null) {
             product.setProductType(productDto.getProductType());
         }
-        if (productDto.getInvoice()!=null) {
-            product.setInvoice(productDto.getInvoice());
+        if (productDto.getInvoiceId()!=null) {
+            Invoice invoice = invoiceRepository.findById(productDto.getInvoiceId())
+                    .orElseThrow(() -> new RecordNotFoundException("Invoice not found with id: " + productDto.getInvoiceId()));
+            product.setInvoice(invoice);
         }
-        if (productDto.getStudyGroup()!=null) {
-            product.setStudyGroup(productDto.getStudyGroup());
+        if (productDto.getStudyGroupId()!=null) {
+            StudyGroup studyGroup = studyGroupRepository.findById(productDto.getStudyGroupId())
+                    .orElseThrow(() -> new RecordNotFoundException("StudyGroup not found with id: " + productDto.getStudyGroupId()));
+            product.setStudyGroup(studyGroup);
         }
         return product;
     }

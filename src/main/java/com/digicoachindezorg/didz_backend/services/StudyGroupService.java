@@ -104,7 +104,7 @@ public class StudyGroupService {
                     userOutputDto.setDateOfBirth(user.getDateOfBirth());
                     userOutputDto.setAddress(user.getAddress());
                     userOutputDto.setAuthority(user.getAuthority());
-                    userOutputDto.setAvailability(user.getAvailability());
+                    /*userOutputDto.setAvailability(user.getAvailability());*/
                     userOutputDto.setCompanyName(user.getCompanyName());
                     userOutputDto.setPhoneNumber(user.getPhoneNumber());
                     return userOutputDto;

@@ -82,7 +82,7 @@ public class UserService {
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setAddress(user.getAddress());
         userDto.setAuthority(user.getAuthority());
-        userDto.setAvailability(user.getAvailability());
+        /*userDto.setAvailability(user.getAvailability());*/
         userDto.setCompanyName(user.getCompanyName());
         userDto.setInvoices(user.getInvoices());
         userDto.setStudyGroups(user.getStudyGroups());
@@ -115,9 +115,9 @@ public class UserService {
         if (userDto.getAuthority()!=null) {
             user.setAuthority(userDto.getAuthority());
         }
-        if (userDto.getAvailability()!=null) {
+        /*if (userDto.getAvailability()!=null) {
             user.setAvailability(userDto.getAvailability());
-        }
+        }*/
         if (userDto.getCompanyName()!=null) {
             user.setCompanyName(userDto.getCompanyName());
         }
@@ -161,9 +161,9 @@ public class UserService {
         if (userDto.getAuthority()!=null) {
             user.setAuthority(userDto.getAuthority());
         }
-        if (userDto.getAvailability()!=null) {
+        /*if (userDto.getAvailability()!=null) {
             user.setAvailability(userDto.getAvailability());
-        }
+        }*/
         if (userDto.getCompanyName()!=null) {
             user.setCompanyName(userDto.getCompanyName());
         }

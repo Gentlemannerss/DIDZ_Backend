@@ -1,10 +1,8 @@
 package com.digicoachindezorg.didz_backend.dtos.input;
 
-import com.digicoachindezorg.didz_backend.models.Invoice;
 import com.digicoachindezorg.didz_backend.models.ProductType;
-import com.digicoachindezorg.didz_backend.models.Review;
-import com.digicoachindezorg.didz_backend.models.StudyGroup;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +18,9 @@ public class ProductInputDto {
     @NotBlank
     private String productName;
     private Double price;
-    private List<Review> reviews;
+    private List<Long> reviewIds;
+    @NotNull
     private ProductType productType;
-    private StudyGroup studyGroup;
-    private Invoice invoice;
+    private Long studyGroupId;
+    private Long invoiceId;
 }
