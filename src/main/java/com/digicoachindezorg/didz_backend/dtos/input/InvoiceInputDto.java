@@ -1,6 +1,5 @@
 package com.digicoachindezorg.didz_backend.dtos.input;
 
-import com.digicoachindezorg.didz_backend.models.User;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -37,8 +36,6 @@ public class InvoiceInputDto {
     @NotNull
     @Positive
     public Double totalPrice;
-
-    public Long userId;
 
     @Size(max = 200)
     public String comments;

@@ -1,6 +1,7 @@
 package com.digicoachindezorg.didz_backend.dtos.input;
 
 import com.digicoachindezorg.didz_backend.models.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -52,4 +54,9 @@ public class UserInputDto {
     private List<ContactForm> contactForms;
 
     private List<Invoice> invoices;
+
+    private Boolean enabled;
+    @JsonSerialize
+    private Set<Authority> authorities;
 }
+

@@ -2,6 +2,7 @@ package com.digicoachindezorg.didz_backend.controllers;
 
 import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
+import com.digicoachindezorg.didz_backend.exceptions.BadRequestException;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+@CrossOrigin //Hoeft niet overal boven.
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -45,11 +48,24 @@ public class UserController {
         List<UserOutputDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
-
-    //Hier de vraag of ik deze nodig heb, omdat een invoice al gekoppeld wordt aan een user.
-    @PutMapping("/{userId}/invoices/{invoiceId}")
-    public ResponseEntity<Void> assignUserToInvoice(@PathVariable Long userId, @PathVariable Long invoiceId) throws RecordNotFoundException {
-        userService.assignUserToInvoice(userId, invoiceId);
-        return ResponseEntity.ok().build();
+    @GetMapping(value = "/{userId}/authorities")
+    public ResponseEntity<Object> getUserAuthorities(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok().body(userService.getAuthorities(userId));
+    }
+    @PostMapping(value = "/{userId}/authorities")
+    public ResponseEntity<Object> addUserAuthority(@PathVariable("userId") Long userId, @RequestBody Map<String, Object> fields) {
+        try {
+            String authorityName = (String) fields.get("authority");
+            userService.addAuthority(userId, authorityName);
+            return ResponseEntity.noContent().build();
+        }
+        catch (Exception ex) {
+            throw new BadRequestException();
+        }
+    }
+    @DeleteMapping(value = "/{userId}/authorities/{authority}")
+    public ResponseEntity<Object> deleteUserAuthority(@PathVariable("userId") Long userId, @PathVariable("authority") String authority) {
+        userService.removeAuthority(userId, authority);
+        return ResponseEntity.noContent().build();
     }
 }

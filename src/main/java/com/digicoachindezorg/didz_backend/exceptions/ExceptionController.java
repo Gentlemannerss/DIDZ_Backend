@@ -2,6 +2,7 @@ package com.digicoachindezorg.didz_backend.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -30,5 +31,24 @@ public class ExceptionController {
         }
 
         return new ResponseEntity<>(exception.getMessage(), status);
+    }
+   /* @ExceptionHandler(value = RecordNotFoundException.class)
+    public ResponseEntity<Object> exception(RecordNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+
+    }*/
+    @ExceptionHandler(value = BadRequestException.class)
+    public ResponseEntity<String> exception(BadRequestException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = UserNotFoundException.class)
+    public ResponseEntity<String> exception(UserNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public ResponseEntity<String> exception(BadCredentialsException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

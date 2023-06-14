@@ -2,6 +2,9 @@ package com.digicoachindezorg.didz_backend.services;
 
 
 import com.digicoachindezorg.didz_backend.dtos.input.InvoiceInputDto;
+import com.digicoachindezorg.didz_backend.dtos.input.InvoiceWithExistingUserInputDto;
+import com.digicoachindezorg.didz_backend.dtos.input.InvoiceWithNewUserInputDto;
+import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.InvoiceOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Invoice;
@@ -42,12 +45,33 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
-    public InvoiceOutputDto createInvoice(InvoiceInputDto invoiceDto) {
-        Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceDto);
+    public InvoiceOutputDto createInvoiceWithExistingUser(InvoiceWithExistingUserInputDto invoiceDto) {
+        Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceDto.invoice);
         invoice.setOrderDate(LocalDate.now());
 
-        //Iemand die een invoice aanmaakt, geeft gegevens in voor een automatische user. Wat moet ik hiervoor doen?
+        //Hier kun je de existing User ophalen en deze set je voor de invoice.
+        if (invoiceDto.getUserId()!=null) {
+            User user = userRepository.findById(invoiceDto.getUserId())
+                    .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + invoiceDto.getUserId()));
+            invoice.setUser(user);
+        }
+        // Calculate total product price
+        calculateTotalProductPrice(invoice);
 
+        Invoice createdInvoice = invoiceRepository.save(invoice);
+        return transferInvoiceToInvoiceOutputDto(createdInvoice);
+    }
+
+    public InvoiceOutputDto createInvoiceWithNewUser(InvoiceWithNewUserInputDto invoiceDto) {
+        Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceDto.invoice);
+        invoice.setOrderDate(LocalDate.now());
+
+        //Hier wordt een nieuwe User aangemaakt en deze set je voor de invoice, hij krijgt de rol van Guest.
+        if (invoiceDto.getUser()!=null) {
+            User user = transferUserInputDtoToUser(invoiceDto.getUser());
+            userRepository.save(user);
+            invoice.setUser(user);
+        }
         // Calculate total product price
         calculateTotalProductPrice(invoice);
 
@@ -120,13 +144,13 @@ public class InvoiceService {
         if (invoiceDto.getAddress()!=null) {
             invoice.setAddress(invoiceDto.getAddress());
         }
-        if (invoiceDto.getUserId()!=null) {
+        /*if (invoiceDto.getUserId()!=null) {
             User user = userRepository.findById(invoiceDto.getUserId())
                     .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + invoiceDto.getUserId()));
-            invoice.setUser(user); //Maak deze methode zoals getProductsID, userRepos maar wel voor een ID, meegeven net zoals producten
-        }
+            invoice.setUser(user);
+        }*/
         if (invoiceDto.getProductsId()!=null) {
-            List<Product> products = productRepository.findAllById(invoiceDto.getProductsId()); //Nu haal ik de ID van producten op, en hiermee haal ik producten uit de database, en geef ik gelijk mee.
+            List<Product> products = productRepository.findAllById(invoiceDto.getProductsId());
             System.out.println(products);
             invoice.setProducts(products);
         }
@@ -155,11 +179,6 @@ public class InvoiceService {
         if (invoiceDto.getAddress()!=null) {
             invoice.setAddress(invoiceDto.getAddress());
         }
-        if (invoiceDto.getUserId()!=null) {
-            User user = userRepository.findById(invoiceDto.getUserId())
-                    .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + invoiceDto.getUserId()));
-            invoice.setUser(user);
-        }
         if (invoiceDto.getProductsId()!=null) {
             List<Product> products = productRepository.findAllById(invoiceDto.getProductsId());
             invoice.setProducts(products);
@@ -180,5 +199,46 @@ public class InvoiceService {
             invoice.setTermsOfCondition(invoiceDto.getTermsOfCondition());
         }
         return invoice;
+    }
+
+    private User transferUserInputDtoToUser(UserInputDto userDto) {
+        User user = new User();
+        if (userDto.getUsername()!=null) {
+            user.setUsername(userDto.getUsername());
+        }
+        if (userDto.getFullName()!=null) {
+            user.setFullName(userDto.getFullName());
+        }
+        if (userDto.getDateOfBirth()!=null) {
+            user.setDateOfBirth(userDto.getDateOfBirth());
+        }
+        if (userDto.getEMail()!=null) {
+            user.setEMail(userDto.getEMail());
+        }
+        if (userDto.getPhoneNumber()!=null) {
+            user.setPhoneNumber(userDto.getPhoneNumber());
+        }
+        if (userDto.getAddress()!=null) {
+            user.setAddress(userDto.getAddress());
+        }
+        if (userDto.getCompanyName()!=null) {
+            user.setCompanyName(userDto.getCompanyName());
+        }
+        if (userDto.getInvoices()!=null) {
+            user.setInvoices(userDto.getInvoices());
+        }
+        if (userDto.getStudyGroups()!=null) {
+            user.setStudyGroups(userDto.getStudyGroups());
+        }
+        if (userDto.getReviews()!=null) {
+            user.setReviews(userDto.getReviews());
+        }
+        if (userDto.getMessages()!=null) {
+            user.setMessages(userDto.getMessages());
+        }
+        if (userDto.getContactForms()!=null) {
+            user.setContactForms(userDto.getContactForms());
+        }
+        return user;
     }
 }

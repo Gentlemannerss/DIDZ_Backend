@@ -150,3 +150,7 @@ public class MessageService {
         return message;
     }
 }
+
+/*
+    Er moet nog een functie komen dat wanneer iemand reageert op een message van de messageBoard dat er andere messages aan gekoppeld kunnen worden.
+*/

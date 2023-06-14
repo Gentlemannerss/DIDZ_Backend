@@ -23,7 +23,6 @@ public class Invoice {
     private LocalDate orderDate;
     private Double totalPrice;
     private String address;
-    /*private Double travelCost; Dit is te lastig om te maken op het moment.*/
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
@@ -38,9 +37,10 @@ public class Invoice {
 
 }
 
-/*  Toevoegen:
+/*  To do list, add the following fields to the Invoice class:
     Name
     Email
     CompanyName
     Description
+    private Double travelCost; Dit is te lastig om te maken op het moment.
 */

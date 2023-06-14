@@ -1,6 +1,8 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
 import com.digicoachindezorg.didz_backend.dtos.input.InvoiceInputDto;
+import com.digicoachindezorg.didz_backend.dtos.input.InvoiceWithExistingUserInputDto;
+import com.digicoachindezorg.didz_backend.dtos.input.InvoiceWithNewUserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.InvoiceOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.services.InvoiceService;
@@ -19,10 +21,13 @@ public class InvoiceController {
     public InvoiceController(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;
     }
-    @PostMapping
-    public ResponseEntity<InvoiceOutputDto> createInvoice(@RequestBody InvoiceInputDto invoiceDto) {
-        InvoiceOutputDto createdInvoice = invoiceService.createInvoice(invoiceDto);
-        return new ResponseEntity<>(createdInvoice, HttpStatus.CREATED);
+    @PostMapping("/new-user")
+    public ResponseEntity<InvoiceOutputDto> createInvoiceWithNewUser(@RequestBody InvoiceWithNewUserInputDto invoiceDto) {
+        return new ResponseEntity<>(invoiceService.createInvoiceWithNewUser(invoiceDto), HttpStatus.CREATED);
+    }
+    @PostMapping("/existing-user")
+    public ResponseEntity<InvoiceOutputDto> createInvoiceWithExistingUser(@RequestBody InvoiceWithExistingUserInputDto invoiceDto) {
+        return new ResponseEntity<>(invoiceService.createInvoiceWithExistingUser(invoiceDto), HttpStatus.CREATED);
     }
     @PutMapping("/{invoiceId}")
     public ResponseEntity<InvoiceOutputDto> updateInvoice(
@@ -39,17 +44,14 @@ public class InvoiceController {
     }
     @GetMapping("/{invoiceId}")
     public ResponseEntity<InvoiceOutputDto> getInvoice(@PathVariable("invoiceId") Long invoiceId) throws RecordNotFoundException {
-        InvoiceOutputDto invoiceDto = invoiceService.getInvoice(invoiceId);
-        return new ResponseEntity<>(invoiceDto, HttpStatus.OK);
+        return new ResponseEntity<>(invoiceService.getInvoice(invoiceId), HttpStatus.OK);
     }
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<InvoiceOutputDto>> getInvoicesByUserId(@PathVariable("userId") Long userId) {
-        List<InvoiceOutputDto> invoices = invoiceService.getInvoicesByUserId(userId);
-        return new ResponseEntity<>(invoices, HttpStatus.OK);
+        return new ResponseEntity<>(invoiceService.getInvoicesByUserId(userId), HttpStatus.OK);
     }
     @GetMapping
     public ResponseEntity<List<InvoiceOutputDto>> getAllInvoices() {
-        List<InvoiceOutputDto> invoices = invoiceService.getAllInvoices();
-        return new ResponseEntity<>(invoices, HttpStatus.OK);
+        return new ResponseEntity<>(invoiceService.getAllInvoices(), HttpStatus.OK);
     }
 }

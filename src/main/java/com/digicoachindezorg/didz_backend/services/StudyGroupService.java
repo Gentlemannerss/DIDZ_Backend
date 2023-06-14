@@ -102,7 +102,7 @@ public class StudyGroupService {
                     userOutputDto.setEMail(user.getEMail());
                     userOutputDto.setDateOfBirth(user.getDateOfBirth());
                     userOutputDto.setAddress(user.getAddress());
-                    userOutputDto.setAuthority(user.getAuthority());
+                    /*userOutputDto.setAuthority(user.getAuthority());*/
                     /*userOutputDto.setAvailability(user.getAvailability()); Deze wordt pas toegevoegd wanneer de agenda nodig is voor een afspraak.*/
                     userOutputDto.setCompanyName(user.getCompanyName());
                     userOutputDto.setPhoneNumber(user.getPhoneNumber());
