@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/studyGroups")
+@RequestMapping("/study-group")
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
@@ -40,7 +40,7 @@ public class StudyGroupController {
         StudyGroupOutputDto studyGroup = studyGroupService.getStudyGroup(id);
         return ResponseEntity.ok(studyGroup);
     }
-    @GetMapping("/byProduct/{productId}")
+    @GetMapping("/by-product/{productId}")
     public ResponseEntity<List<StudyGroupOutputDto>> getStudyGroupsByProduct(@PathVariable Long productId) {
         List<StudyGroupOutputDto> studyGroups = studyGroupService.getStudyGroupsByProduct(productId);
         return ResponseEntity.ok(studyGroups);
@@ -66,3 +66,8 @@ public class StudyGroupController {
         return ResponseEntity.ok(studyGroupUsers);
     }
 }
+
+/*      To Do:
+    -Ook hier worden de ID niet goed gebruikt, bijvoorbeeld nu is het wel weer userId.
+    -GetAllStudyGroups moet eigenlijk een andere request mapping krijgen. kan dit?
+*/

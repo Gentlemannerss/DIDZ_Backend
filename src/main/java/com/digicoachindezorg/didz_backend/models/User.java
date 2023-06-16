@@ -39,9 +39,8 @@ public class User {
     private String eMail;
     private LocalDate dateOfBirth;
     private String address;
-    /*private LocalDate availability; Deze wordt pas toegevoegd wanneer de agenda nodig is voor een afspraak.*/
     private String companyName;
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     @ManyToMany(mappedBy = "users")
     @JsonIgnore

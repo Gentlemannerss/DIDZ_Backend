@@ -24,7 +24,7 @@ public class UserOutputDto {
     private String authority;
     private LocalDate availability;
     private String companyName;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private List<StudyGroup> studyGroups;
     private Review reviews;
     private List<Message> messages;

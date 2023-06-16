@@ -5,18 +5,13 @@ import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.exceptions.UserNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Authority;
-import com.digicoachindezorg.didz_backend.models.Invoice;
 import com.digicoachindezorg.didz_backend.models.User;
-import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
 import com.digicoachindezorg.didz_backend.utils.RandomStringGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,14 +19,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final InvoiceRepository invoiceRepository;
-    @Autowired
-    @Lazy
-    private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, InvoiceRepository invoiceRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.invoiceRepository = invoiceRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserOutputDto> getAllUsers() {
@@ -48,8 +41,7 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) throws RecordNotFoundException {
-        User user = userRepository.findByUsername(username);
-        return user;
+        return userRepository.findByUsername(username);
     }
 
     public UserOutputDto createUser(UserInputDto userInputDto) {
@@ -75,15 +67,6 @@ public class UserService {
             throw new RecordNotFoundException("User not found with id: " + id);
         }
         userRepository.deleteById(id);
-    }
-
-    public void assignUserToInvoice(Long userId, Long invoiceId) throws RecordNotFoundException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + userId));
-        Invoice invoice = invoiceRepository.findById(invoiceId)
-                .orElseThrow(() -> new RecordNotFoundException("Invoice not found with id: " + invoiceId));
-        user.getInvoices().add(invoice);
-        userRepository.save(user);
     }
 
     public Set<Authority> getAuthorities(Long userId) {
@@ -122,7 +105,7 @@ public class UserService {
         userDto.setInvoices(user.getInvoices());
         userDto.setStudyGroups(user.getStudyGroups());
         userDto.setReviews(user.getReviews());
-        userDto.setMessages(user.getMessages()); // Wat moet ik hier doen om beide messages op te vangen aan een message.
+        userDto.setMessages(user.getMessages());
         userDto.setContactForms(user.getContactForms());
         return userDto;
     }

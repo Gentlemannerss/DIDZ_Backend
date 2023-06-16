@@ -43,7 +43,7 @@ public class UserInputDto {
     private String companyName;
 
     @NotNull(message = "Phone number is required")
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     private List<StudyGroup> studyGroups;
 

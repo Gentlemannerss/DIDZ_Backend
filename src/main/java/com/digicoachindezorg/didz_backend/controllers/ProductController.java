@@ -45,3 +45,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 }
+
+/*
+    - Moeten de Id hier niet productId zijn, (duplicates in code?)
+*/

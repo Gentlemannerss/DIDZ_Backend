@@ -40,7 +40,7 @@ public class AuthenticationController {
     }
 
     /*
-    Deze methode geeft het JWT token terug wanneer de gebruiker de juiste inloggegevens op geeft.
+    Deze methode geeft het JWT-token terug wanneer de gebruiker de juiste inloggegevens op geeft.
      */
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {

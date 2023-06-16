@@ -7,13 +7,17 @@ import com.digicoachindezorg.didz_backend.dtos.input.InvoiceWithNewUserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.InvoiceOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
+import com.digicoachindezorg.didz_backend.models.Authority;
 import com.digicoachindezorg.didz_backend.models.Invoice;
 import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.models.User;
 import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
 import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,6 +29,9 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
 
     public InvoiceService(InvoiceRepository invoiceRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.invoiceRepository = invoiceRepository;
@@ -66,10 +73,11 @@ public class InvoiceService {
         Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceDto.invoice);
         invoice.setOrderDate(LocalDate.now());
 
-        //Hier wordt een nieuwe User aangemaakt en deze set je voor de invoice, hij krijgt de rol van Guest.
         if (invoiceDto.getUser()!=null) {
             User user = transferUserInputDtoToUser(invoiceDto.getUser());
             userRepository.save(user);
+            user.addAuthority(new Authority(user.getId(), "ROLE_GUEST"));
+            userRepository.save(user); //Nog een keer zetten anders heeft de user geen id.
             invoice.setUser(user);
         }
         // Calculate total product price
@@ -144,11 +152,6 @@ public class InvoiceService {
         if (invoiceDto.getAddress()!=null) {
             invoice.setAddress(invoiceDto.getAddress());
         }
-        /*if (invoiceDto.getUserId()!=null) {
-            User user = userRepository.findById(invoiceDto.getUserId())
-                    .orElseThrow(() -> new RecordNotFoundException("User not found with id: " + invoiceDto.getUserId()));
-            invoice.setUser(user);
-        }*/
         if (invoiceDto.getProductsId()!=null) {
             List<Product> products = productRepository.findAllById(invoiceDto.getProductsId());
             System.out.println(products);
@@ -205,6 +208,9 @@ public class InvoiceService {
         User user = new User();
         if (userDto.getUsername()!=null) {
             user.setUsername(userDto.getUsername());
+        }
+        if (userDto.getPassword()!=null) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
         if (userDto.getFullName()!=null) {
             user.setFullName(userDto.getFullName());

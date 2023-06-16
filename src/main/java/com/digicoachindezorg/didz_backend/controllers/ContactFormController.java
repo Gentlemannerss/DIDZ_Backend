@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ContactForm")
+@RequestMapping("/contactform")
 public class ContactFormController {
 
     private final ContactFormService contactFormService;
@@ -46,45 +46,8 @@ public class ContactFormController {
     }
 }
 
-/* De eerste versie:
-
-@RestController
-@RequestMapping("/ContactForm")
-public class ContactFormController {
-
-    // Dit is de Variable!
-    private final ContactFormService contactFormService;
-    // Dit is de Constructor!
-    public ContactFormController(ContactFormService contactFormService) {
-        this.contactFormService = contactFormService;
-    }
-
-
-
-    @GetMapping
-    public ResponseEntity<List<ContactForm>> getAllContactForms() {
-        return ResponseEntity.ok().body(contactFormService.getAllContactForms());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ContactForm> getContactForm(@PathVariable Long id) {
-        return ResponseEntity.ok(contactFormService.getContactForm(id));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ContactForm> updateContactForm(@PathVariable Long id, @RequestBody ContactForm contactFormToUpdate) throws RecordNotFoundException {
-        ContactForm updatedContactForm = contactFormService.updateContactForm(id, contactFormToUpdate);
-        return ResponseEntity.ok(updatedContactForm);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteContactForm(@PathVariable Long id) throws RecordNotFoundException {
-        contactFormService.deleteContactForm(id);
-    }
-
-    @PostMapping("")
-    public ResponseEntity<ContactFormDto> createContactForm(@RequestBody ContactFormDto contactFormDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(contactFormService.createContactForm(contactFormDto));
-    }
-}
+/*      TODO:
+    -Check if possible to change RequestMapping above GetAllContactForms
+    -Check if mapping above create is correct
+    -Check for id (needs to be contactformID because of duplicate with user?)
 */
