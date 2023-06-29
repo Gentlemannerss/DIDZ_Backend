@@ -27,7 +27,13 @@ public class Invoice {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
-    @OneToMany(mappedBy = "invoice")
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "invoice_product",
+            joinColumns = @JoinColumn(name = "invoice_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<Product> products;
     private Integer amountOfParticipants;
     private String invoiceAddress;
@@ -37,7 +43,7 @@ public class Invoice {
 
 }
 
-/*  To do list, add the following fields to the Invoice class:
+/*  Todo list, add the following fields to the Invoice class:
     Name
     Email
     CompanyName

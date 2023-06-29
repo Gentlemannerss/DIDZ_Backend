@@ -46,6 +46,6 @@ public class ProductController {
     }
 }
 
-/*
+/* todo
     - Moeten de Id hier niet productId zijn, (duplicates in code?)
 */

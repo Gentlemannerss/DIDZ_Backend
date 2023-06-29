@@ -2,7 +2,9 @@ package com.digicoachindezorg.didz_backend.controllers;
 
 import com.digicoachindezorg.didz_backend.dtos.payload.AuthenticationRequest;
 import com.digicoachindezorg.didz_backend.dtos.payload.AuthenticationResponse;
+import com.digicoachindezorg.didz_backend.models.User;
 import com.digicoachindezorg.didz_backend.services.CustomUserDetailsService;
+import com.digicoachindezorg.didz_backend.services.UserService;
 import com.digicoachindezorg.didz_backend.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,12 +25,15 @@ public class AuthenticationController {
 
     private final CustomUserDetailsService userDetailsService;
 
+    private final UserService userService;
+
     private final JwtUtil jwtUtil;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, CustomUserDetailsService userDetailsService, JwtUtil jwtUtl) {
+    public AuthenticationController(AuthenticationManager authenticationManager, CustomUserDetailsService userDetailsService, JwtUtil jwtUtl, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtUtil = jwtUtl;
+        this.userService = userService;
     }
 
     /*
@@ -60,9 +65,11 @@ public class AuthenticationController {
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(username);
 
+        final User user = userService.getUserByUsername(username);
+
         final String jwt = jwtUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt, user.getId()));
     }
 
 }

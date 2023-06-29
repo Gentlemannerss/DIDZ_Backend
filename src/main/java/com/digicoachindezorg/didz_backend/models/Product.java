@@ -21,7 +21,7 @@ public class Product {
     private Long productId;
     private String productName;
     private Double price;
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Review> reviews;
     @Enumerated(EnumType.STRING)
@@ -29,16 +29,8 @@ public class Product {
     @OneToOne(mappedBy = "product")
     @JsonIgnore
     private StudyGroup studyGroup;
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "invoice_id")
-    private Invoice invoice;
-
+    @ManyToMany(mappedBy = "products")
+    private List<Invoice> invoices;
 }
 
-
-    /*
-   private List<Byte> images;
-   Dit is voor images, maar maak eerst de rest van de applicatie.
-
-   */
+//todo maak een byte voor image, en maak een productDescription!

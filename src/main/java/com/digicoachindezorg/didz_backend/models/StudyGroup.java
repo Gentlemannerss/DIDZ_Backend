@@ -35,3 +35,4 @@ public class StudyGroup {
     @OneToMany(mappedBy = "studyGroup")
     private List<Message> MessageBoard = new ArrayList<>();
 }
+//todo add the coach to the studygroup.

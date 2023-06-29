@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin //Hoeft niet overal boven, vragen aan sam! Kan geen kwaad.
 @RestController
 @RequestMapping("/users")
 public class UserController {

@@ -76,8 +76,8 @@ public class InvoiceService {
         if (invoiceDto.getUser()!=null) {
             User user = transferUserInputDtoToUser(invoiceDto.getUser());
             userRepository.save(user);
-            user.addAuthority(new Authority(user.getId(), "ROLE_GUEST"));
-            userRepository.save(user); //Nog een keer zetten anders heeft de user geen id.
+            user.addAuthority(new Authority(user.getId(), "ROLE_USER"));
+            userRepository.save(user);
             invoice.setUser(user);
         }
         // Calculate total product price

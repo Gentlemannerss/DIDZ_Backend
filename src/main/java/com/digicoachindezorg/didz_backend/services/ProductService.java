@@ -3,7 +3,6 @@ package com.digicoachindezorg.didz_backend.services;
 import com.digicoachindezorg.didz_backend.dtos.input.ProductInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.ProductOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
-import com.digicoachindezorg.didz_backend.models.Invoice;
 import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.models.Review;
 import com.digicoachindezorg.didz_backend.models.StudyGroup;
@@ -11,14 +10,15 @@ import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
 import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
 import com.digicoachindezorg.didz_backend.repositories.ReviewRepository;
 import com.digicoachindezorg.didz_backend.repositories.StudyGroupRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-
+    @Lazy
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final InvoiceRepository invoiceRepository;
@@ -33,10 +33,20 @@ public class ProductService {
 
     public List<ProductOutputDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
+        List<ProductOutputDto> list = new ArrayList<>();
+        for (Product product : products) {
+            list.add(transferProductToProductOutputDto(product));
+        }
+        return list;
+    }
+
+    /*public List<ProductOutputDto> getProductsByUserId(Long userId) {
+        invoiceRepository.findByUserUserId(userId);
+        List<Product> products = productRepository.findByUserId(userId);
         return products.stream()
                 .map(this::transferProductToProductOutputDto)
                 .collect(Collectors.toList());
-    }
+    }*/
 
     public ProductOutputDto getProduct(Long id) throws RecordNotFoundException {
         Product product = productRepository.findById(id)
@@ -53,9 +63,7 @@ public class ProductService {
     public ProductOutputDto updateProduct(Long id, ProductInputDto productDtoToUpdate) throws RecordNotFoundException {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Product not found with id: " + id));
-
         Product updatedProduct = updateProductInputDtoToProduct(productDtoToUpdate, existingProduct);
-
         Product savedProduct = productRepository.save(updatedProduct);
         return transferProductToProductOutputDto(savedProduct);
     }
@@ -74,7 +82,6 @@ public class ProductService {
         productDto.setReviews(product.getReviews());
         productDto.setPrice(product.getPrice());
         productDto.setProductType(product.getProductType());
-        productDto.setInvoice(product.getInvoice());
         productDto.setStudyGroup(product.getStudyGroup());
         return productDto;
     }
@@ -93,11 +100,6 @@ public class ProductService {
         }
         if (productDto.getProductType()!=null) {
             product.setProductType(productDto.getProductType());
-        }
-        if (productDto.getInvoiceId()!=null) {
-            Invoice invoice = invoiceRepository.findById(productDto.getInvoiceId())
-                    .orElseThrow(() -> new RecordNotFoundException("Invoice not found with id: " + productDto.getInvoiceId()));
-            product.setInvoice(invoice);
         }
         if (productDto.getStudyGroupId()!=null) {
             StudyGroup studyGroup = studyGroupRepository.findById(productDto.getStudyGroupId())
@@ -120,11 +122,6 @@ public class ProductService {
         }
         if (productDto.getProductType()!=null) {
             product.setProductType(productDto.getProductType());
-        }
-        if (productDto.getInvoiceId()!=null) {
-            Invoice invoice = invoiceRepository.findById(productDto.getInvoiceId())
-                    .orElseThrow(() -> new RecordNotFoundException("Invoice not found with id: " + productDto.getInvoiceId()));
-            product.setInvoice(invoice);
         }
         if (productDto.getStudyGroupId()!=null) {
             StudyGroup studyGroup = studyGroupRepository.findById(productDto.getStudyGroupId())
