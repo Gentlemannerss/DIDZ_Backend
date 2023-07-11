@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.services;
 
+import com.digicoachindezorg.didz_backend.dtos.input.PasswordInputDto;
 import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -91,6 +93,22 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public String updatePassword(Long userId, PasswordInputDto passwordInputDto) {
+        if (!userRepository.existsById(userId)) {
+            throw new RecordNotFoundException("The user with userId: " + userId + " doesn't exist.");
+        }
+        Optional<User> user = userRepository.findById(userId);
+
+        if (user.isEmpty()) {
+            throw new RecordNotFoundException("The user with userId: " + userId + " doesn't exist.");
+        }
+        user.get().setPassword(passwordEncoder.encode(passwordInputDto.newPassword));
+
+        userRepository.save(user.get());
+
+        return "The password has been updated sucessfully.";
+    }
+
     private UserOutputDto transferUserToUserOutputDto(User user) {
         UserOutputDto userDto = new UserOutputDto();
         userDto.setId(user.getId());
@@ -98,7 +116,8 @@ public class UserService {
         userDto.setFullName(user.getFullName());
         userDto.setAuthorities(user.getAuthorities());
         userDto.setDateOfBirth(user.getDateOfBirth());
-        userDto.setEMail(user.getEMail());
+        userDto.setPrivateEMail(user.getPrivateEMail());
+        userDto.setWorkEMail(user.getWorkEMail());
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setAddress(user.getAddress());
         userDto.setCompanyName(user.getCompanyName());
@@ -124,8 +143,11 @@ public class UserService {
         if (userDto.getDateOfBirth()!=null) {
             user.setDateOfBirth(userDto.getDateOfBirth());
         }
-        if (userDto.getEMail()!=null) {
-            user.setEMail(userDto.getEMail());
+        if (userDto.getPrivateEMail()!=null) {
+            user.setPrivateEMail(userDto.getPrivateEMail());
+        }
+        if (userDto.getWorkEMail()!=null) {
+            user.setWorkEMail(userDto.getWorkEMail());
         }
         if (userDto.getPhoneNumber()!=null) {
             user.setPhoneNumber(userDto.getPhoneNumber());
@@ -167,8 +189,11 @@ public class UserService {
         if (userDto.getDateOfBirth()!=null) {
             user.setDateOfBirth(userDto.getDateOfBirth());
         }
-        if (userDto.getEMail()!=null) {
-            user.setEMail(userDto.getEMail());
+        if (userDto.getPrivateEMail()!=null) {
+            user.setPrivateEMail(userDto.getPrivateEMail());
+        }
+        if (userDto.getWorkEMail()!=null) {
+            user.setWorkEMail(userDto.getWorkEMail());
         }
         if (userDto.getPhoneNumber()!=null) {
             user.setPhoneNumber(userDto.getPhoneNumber());

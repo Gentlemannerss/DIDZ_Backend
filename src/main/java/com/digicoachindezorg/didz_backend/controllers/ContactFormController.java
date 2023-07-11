@@ -24,19 +24,19 @@ public class ContactFormController {
         ContactFormOutputDto createdContactForm = contactFormService.createContactForm(contactFormDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdContactForm);
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<ContactFormOutputDto> updateContactForm(@PathVariable Long id, @RequestBody ContactFormInputDto contactFormDtoToUpdate) throws RecordNotFoundException {
-        ContactFormOutputDto updatedContactForm = contactFormService.updateContactForm(id, contactFormDtoToUpdate);
+    @PutMapping("/{contactFormId}")
+    public ResponseEntity<ContactFormOutputDto> updateContactForm(@PathVariable Long contactFormId, @RequestBody ContactFormInputDto contactFormDtoToUpdate) throws RecordNotFoundException {
+        ContactFormOutputDto updatedContactForm = contactFormService.updateContactForm(contactFormId, contactFormDtoToUpdate);
         return ResponseEntity.ok(updatedContactForm);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteContactForm(@PathVariable Long id) throws RecordNotFoundException {
-        contactFormService.deleteContactForm(id);
+    @DeleteMapping("/{contactFormId}")
+    public ResponseEntity<Void> deleteContactForm(@PathVariable Long contactFormId) throws RecordNotFoundException {
+        contactFormService.deleteContactForm(contactFormId);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<ContactFormOutputDto> getContactForm(@PathVariable Long id) {
-        ContactFormOutputDto contactForm = contactFormService.getContactForm(id);
+    @GetMapping("/{contactFormId}")
+    public ResponseEntity<ContactFormOutputDto> getContactForm(@PathVariable Long contactFormId) {
+        ContactFormOutputDto contactForm = contactFormService.getContactForm(contactFormId);
         return ResponseEntity.ok(contactForm);
     }
     @GetMapping
@@ -45,9 +45,3 @@ public class ContactFormController {
         return ResponseEntity.ok(contactForms);
     }
 }
-
-/*      TODO:
-    -Check if possible to change RequestMapping above GetAllContactForms
-    -Check if mapping above create is correct
-    -Check for id (needs to be contactformID because of duplicate with user?)
-*/

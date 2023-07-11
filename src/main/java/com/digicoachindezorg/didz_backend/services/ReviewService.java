@@ -2,6 +2,7 @@ package com.digicoachindezorg.didz_backend.services;
 
 import com.digicoachindezorg.didz_backend.dtos.input.ReviewInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.ReviewOutputDto;
+import com.digicoachindezorg.didz_backend.exceptions.BadRequestException;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.Product;
 import com.digicoachindezorg.didz_backend.models.Review;
@@ -36,6 +37,15 @@ public class ReviewService {
     }
 
     public ReviewOutputDto createReview(ReviewInputDto reviewInputDto) throws RecordNotFoundException {
+        User user = userRepository.findById(reviewInputDto.getCustomerId()).orElseThrow(() -> new RecordNotFoundException("User not found"));
+        List <Review> reviews = reviewRepository.findByCustomer(user);
+
+        for (Review review : reviews) {
+            if (review.getProduct().getProductId().equals(reviewInputDto.getProductId())) {
+                throw new BadRequestException("Review already exists for this product and user");
+            }
+        }
+
         Review review = transferReviewInputDtoToReview(reviewInputDto);
         Review createdReview = reviewRepository.save(review);
         return transferReviewToReviewOutputDto(createdReview);

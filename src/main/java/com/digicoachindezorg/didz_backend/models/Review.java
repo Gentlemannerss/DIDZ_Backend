@@ -22,7 +22,7 @@ public class Review {
     private Integer score;
     private LocalDate dateOfWriting;
     private String reviewDescription;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY) /*todo: maak hier een andere relatie, of op frontend een update in plaats van create!!!*/
     @JsonIgnore
     private User customer;
     @ManyToOne

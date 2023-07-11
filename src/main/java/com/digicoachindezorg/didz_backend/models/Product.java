@@ -20,17 +20,19 @@ public class Product {
     @GeneratedValue
     private Long productId;
     private String productName;
+    private String productDescription;
     private Double price;
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Review> reviews;
     @Enumerated(EnumType.STRING)
     private ProductType productType;
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product") //todo: maak hier een OneToMany relatie worden.
     @JsonIgnore
     private StudyGroup studyGroup;
     @ManyToMany(mappedBy = "products")
+    @JsonIgnore
     private List<Invoice> invoices;
 }
 
-//todo maak een byte voor image, en maak een productDescription!
+//todo maak een byte voor image.

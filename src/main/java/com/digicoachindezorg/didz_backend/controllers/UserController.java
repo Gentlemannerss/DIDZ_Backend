@@ -1,12 +1,16 @@
 package com.digicoachindezorg.didz_backend.controllers;
 
+import com.digicoachindezorg.didz_backend.dtos.input.PasswordInputDto;
 import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.UserOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.BadRequestException;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.services.UserService;
+import com.digicoachindezorg.didz_backend.utils.FieldErrorHandling;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,4 +71,16 @@ public class UserController {
         userService.removeAuthority(userId, authority);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/passwordrequest/{userId}")
+    public ResponseEntity<String> updatePassword(@PathVariable("userId") Long userId, @Valid @RequestBody PasswordInputDto passwordInputDto, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors()) {
+            return ResponseEntity.badRequest().body(FieldErrorHandling.getErrorToStringHandling(bindingResult));
+        }
+
+        return new ResponseEntity<>(userService.updatePassword(userId, passwordInputDto), HttpStatus.ACCEPTED);
+
+    }
 }
+
+//todo : add DeleteMapping for remove all emails, fix passwordRequest.

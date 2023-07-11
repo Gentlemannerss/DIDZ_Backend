@@ -49,16 +49,17 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/authenticate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/authenticated").authenticated()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/users/{id}").hasAnyRole("USER", "COACH", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/users/{id}").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/users/{id}/authorities").hasAnyRole("USER", "COACH", "ADMIN")
                 .requestMatchers(HttpMethod.POST,"/users/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/contactform").permitAll()
-                .requestMatchers(HttpMethod.GET, "/contactform").permitAll() //Niet mogelijk om de requestMapping aan te passen.
+                .requestMatchers(HttpMethod.GET, "/contactform").hasRole("ADMIN") //Niet mogelijk om de requestMapping aan te passen.
                 .requestMatchers(HttpMethod.GET, "/contactform/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/contactform/{id}").hasRole("ADMIN") //Niemand kan dit aanpassen.
                 .requestMatchers(HttpMethod.DELETE, "/contactform/{id}").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST,"/reviews").permitAll() // todo : hasRole("USER")
+                .requestMatchers(HttpMethod.POST,"/reviews").hasRole("USER")
                 .requestMatchers(HttpMethod.PUT,"/reviews/{id}").hasRole("USER")
                 .requestMatchers(HttpMethod.DELETE,"/reviews/{id}").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/reviews/{id}").permitAll()
@@ -77,7 +78,7 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/messages/users/{userId}").hasRole("ADMIN") //Mogelijk weg omdat de admin dit niet zomaar mag, dit kan ook in de database.
                 .requestMatchers(HttpMethod.GET,"/messages/sent/{userId}").hasAnyRole("USER", "COACH", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/messages/study-group/{studyGroupId}").hasAnyRole("USER", "COACH", "ADMIN")
-                .requestMatchers(HttpMethod.POST,"/products").permitAll() // todo : hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/products").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/products/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE,"/products/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/products/{id}").permitAll()
@@ -92,6 +93,11 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/study-group/{studyGroupId}/users/{userId}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/study-group/{studyGroupId}/users/{userId}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/study-group/{studyGroupId}/users").hasAnyRole("USER","COACH","ADMIN")
+
+                .requestMatchers(HttpMethod.POST, "/uploadprofilepic/{userId}").hasAnyRole("USER", "COACH","ADMIN")
+                // get profile pic is visible for everyone (??) // TODO: what is best practice
+                .requestMatchers(HttpMethod.GET, "/downloadprofilepic/{userId}").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/deleteprofilepic/{userId}").hasAnyRole("USER", "COACH","ADMIN")
 
                 .anyRequest().denyAll()
                 .and()

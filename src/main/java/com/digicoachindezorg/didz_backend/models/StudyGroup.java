@@ -21,7 +21,7 @@ public class StudyGroup {
     @GeneratedValue
     private Long groupId;
     private String groupName;
-    @OneToOne
+    @OneToOne //todo: maak hier een ManyToOne relatie van.
     @JsonIgnore
     private Product product;
     @ManyToMany
@@ -35,4 +35,3 @@ public class StudyGroup {
     @OneToMany(mappedBy = "studyGroup")
     private List<Message> MessageBoard = new ArrayList<>();
 }
-//todo add the coach to the studygroup.

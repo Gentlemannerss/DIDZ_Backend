@@ -36,11 +36,17 @@ public class User {
     private String apikey;
     private String fullName;
     @Email
-    private String eMail;
+    private String privateEMail;
+    @Email
+    private String workEMail;
     private LocalDate dateOfBirth;
     private String address;
     private String companyName;
+    private String companyAddress;
     private String phoneNumber;
+    private String gender;
+    private String profilePicUrl;
+    private String fileName;
 
     @ManyToMany(mappedBy = "users")
     @JsonIgnore
@@ -68,6 +74,7 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Authority> authorities = new HashSet<>();
 
     //Getters and Setters

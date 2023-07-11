@@ -24,19 +24,19 @@ public class ProductController {
         ProductOutputDto createdProduct = productService.createProduct(productDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductOutputDto> updateProduct(@PathVariable Long id, @RequestBody ProductInputDto productDtoToUpdate) throws RecordNotFoundException {
-        ProductOutputDto updatedProduct = productService.updateProduct(id, productDtoToUpdate);
+    @PutMapping("/{productId}")
+    public ResponseEntity<ProductOutputDto> updateProduct(@PathVariable Long productId, @RequestBody ProductInputDto productDtoToUpdate) throws RecordNotFoundException {
+        ProductOutputDto updatedProduct = productService.updateProduct(productId, productDtoToUpdate);
         return ResponseEntity.ok(updatedProduct);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) throws RecordNotFoundException {
-        productService.deleteProduct(id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) throws RecordNotFoundException {
+        productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductOutputDto> getProduct(@PathVariable Long id) throws RecordNotFoundException {
-        ProductOutputDto product = productService.getProduct(id);
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductOutputDto> getProduct(@PathVariable Long productId) throws RecordNotFoundException {
+        ProductOutputDto product = productService.getProduct(productId);
         return ResponseEntity.ok(product);
     }
     @GetMapping
@@ -45,7 +45,3 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 }
-
-/* todo
-    - Moeten de Id hier niet productId zijn, (duplicates in code?)
-*/

@@ -18,12 +18,15 @@ public class UserOutputDto {
     private String username;
     private String fullName;
     private String password;
-    private String eMail;
+    private String privateEMail;
+    private String workEMail;
     private LocalDate dateOfBirth;
     private String address;
     private String authority;
     private LocalDate availability;
     private String companyName;
+    private String companyAddress;
+    private String gender;
     private String phoneNumber;
     private List<StudyGroup> studyGroups;
     private Review reviews;
@@ -32,6 +35,7 @@ public class UserOutputDto {
     private List<Invoice> invoices;
     private Boolean enabled;
     private String apikey;
+    private String profilePicUrl;
     @JsonSerialize
     private Set<Authority> authorities;
 

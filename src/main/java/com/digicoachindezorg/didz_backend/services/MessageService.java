@@ -96,7 +96,7 @@ public class MessageService {
         messageDto.setIsConcept(message.getIsConcept());
         User receiver = message.getReceiver();
         if (receiver != null) {
-            messageDto.setReceiverEmail(receiver.getEMail());
+            messageDto.setReceiverEmail(receiver.getPrivateEMail());
         }
         return messageDto;
     }
@@ -120,7 +120,7 @@ public class MessageService {
             message.setIsConcept(messageDto.getIsConcept());
         }
         if (messageDto.getReceiverEmail()!=null) {
-            User user = userRepository.findByeMail(messageDto.getReceiverEmail());
+            User user = userRepository.findByPrivateEMail(messageDto.getReceiverEmail());
             message.setReceiver(user);
         }
         return message;
@@ -144,7 +144,7 @@ public class MessageService {
             message.setIsConcept(messageDto.getIsConcept());
         }
         if (messageDto.getReceiverEmail()!=null) {
-            User user = userRepository.findByeMail(messageDto.getReceiverEmail());
+            User user = userRepository.findByPrivateEMail(messageDto.getReceiverEmail());
             message.setReceiver(user);
         }
         return message;

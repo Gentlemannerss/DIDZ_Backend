@@ -27,7 +27,10 @@ public class UserInputDto {
     private String fullName;
 
     @Email(message = "Invalid email format")
-    private String eMail;
+    private String privateEMail;
+
+    @Email(message = "Invalid email format")
+    private String workEMail;
 
     @NotNull(message = "Date of birth is required")
     private LocalDate dateOfBirth;
@@ -41,6 +44,10 @@ public class UserInputDto {
     private LocalDate availability;
 
     private String companyName;
+
+    private String companyAddress;
+
+    private String gender;
 
     @NotNull(message = "Phone number is required")
     private String phoneNumber;

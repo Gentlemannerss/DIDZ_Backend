@@ -218,8 +218,11 @@ public class InvoiceService {
         if (userDto.getDateOfBirth()!=null) {
             user.setDateOfBirth(userDto.getDateOfBirth());
         }
-        if (userDto.getEMail()!=null) {
-            user.setEMail(userDto.getEMail());
+        if (userDto.getPrivateEMail()!=null) {
+            user.setPrivateEMail(userDto.getPrivateEMail());
+        }
+        if (userDto.getWorkEMail()!=null) {
+            user.setWorkEMail(userDto.getWorkEMail());
         }
         if (userDto.getPhoneNumber()!=null) {
             user.setPhoneNumber(userDto.getPhoneNumber());
