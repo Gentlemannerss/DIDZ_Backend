@@ -52,7 +52,6 @@ public class StudyGroupService {
         StudyGroup studyGroup = transferStudyGroupInputDtoToStudyGroup(studyGroupInputDto);
         StudyGroup createdStudyGroup = studyGroupRepository.save(studyGroup);
         return transferStudyGroupToStudyGroupOutputDto(createdStudyGroup);
-        //todo add the coach to the studygroup.
     }
 
     public StudyGroupOutputDto updateStudyGroup(Long id, StudyGroupInputDto studyGroupInputDtoToUpdate) throws RecordNotFoundException {
@@ -89,7 +88,12 @@ public class StudyGroupService {
         return transferStudyGroupToStudyGroupOutputDto(updatedStudyGroup);
     }
 
-    //todo: make method get studyGroupByUserId
+    public List<StudyGroupOutputDto> getStudyGroupsByUser(Long userId) {
+        List<StudyGroup> studyGroups = studyGroupRepository.findByUsers_id(userId);
+        return studyGroups.stream()
+                .map(this::transferStudyGroupToStudyGroupOutputDto)
+                .collect(Collectors.toList());
+    }
 
     public List<UserOutputDto> getStudyGroupUsers(Long studyGroupId) throws RecordNotFoundException {
         StudyGroup studyGroup = studyGroupRepository.findById(studyGroupId)
@@ -163,4 +167,5 @@ public class StudyGroupService {
         }
         return studyGroup;
     }
+
 }

@@ -7,12 +7,10 @@ import com.digicoachindezorg.didz_backend.dtos.input.InvoiceWithNewUserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.input.UserInputDto;
 import com.digicoachindezorg.didz_backend.dtos.output.InvoiceOutputDto;
 import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
-import com.digicoachindezorg.didz_backend.models.Authority;
-import com.digicoachindezorg.didz_backend.models.Invoice;
-import com.digicoachindezorg.didz_backend.models.Product;
-import com.digicoachindezorg.didz_backend.models.User;
+import com.digicoachindezorg.didz_backend.models.*;
 import com.digicoachindezorg.didz_backend.repositories.InvoiceRepository;
 import com.digicoachindezorg.didz_backend.repositories.ProductRepository;
+import com.digicoachindezorg.didz_backend.repositories.ReviewRepository;
 import com.digicoachindezorg.didz_backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -29,14 +27,16 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
     @Autowired
     @Lazy
     private PasswordEncoder passwordEncoder;
 
-    public InvoiceService(InvoiceRepository invoiceRepository, ProductRepository productRepository, UserRepository userRepository) {
+    public InvoiceService(InvoiceRepository invoiceRepository, ProductRepository productRepository, UserRepository userRepository, ReviewRepository reviewRepository) {
         this.invoiceRepository = invoiceRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     public InvoiceOutputDto getInvoice(Long invoiceId) throws RecordNotFoundException {
@@ -240,7 +240,12 @@ public class InvoiceService {
             user.setStudyGroups(userDto.getStudyGroups());
         }
         if (userDto.getReviews()!=null) {
-            user.setReviews(userDto.getReviews());
+            List<Long> reviewIds = userDto.getReviews().stream()
+                    .map(Review::getReviewId)
+                    .collect(Collectors.toList());
+
+            List<Review> reviews = reviewRepository.findAllById(reviewIds);
+            user.setReviews(reviews);
         }
         if (userDto.getMessages()!=null) {
             user.setMessages(userDto.getMessages());

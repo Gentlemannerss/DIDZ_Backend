@@ -65,6 +65,12 @@ public class StudyGroupController {
         List<UserOutputDto> studyGroupUsers = studyGroupService.getStudyGroupUsers(studyGroupId);
         return ResponseEntity.ok(studyGroupUsers);
     }
+
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<List<StudyGroupOutputDto>> getStudyGroupsByUser(@PathVariable Long userId) {
+        List<StudyGroupOutputDto> studyGroups = studyGroupService.getStudyGroupsByUser(userId);
+        return ResponseEntity.ok(studyGroups);
+    }
 }
 
 /*      To Do:

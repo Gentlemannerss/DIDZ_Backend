@@ -54,7 +54,7 @@ public class UserInputDto {
 
     private List<StudyGroup> studyGroups;
 
-    private Review reviews;
+    private List<Review> reviews;
 
     private List<Message> messages;
 

@@ -71,16 +71,6 @@ public class UserController {
         userService.removeAuthority(userId, authority);
         return ResponseEntity.noContent().build();
     }
-
-    @PutMapping("/passwordrequest/{userId}")
-    public ResponseEntity<String> updatePassword(@PathVariable("userId") Long userId, @Valid @RequestBody PasswordInputDto passwordInputDto, BindingResult bindingResult) {
-        if (bindingResult.hasFieldErrors()) {
-            return ResponseEntity.badRequest().body(FieldErrorHandling.getErrorToStringHandling(bindingResult));
-        }
-
-        return new ResponseEntity<>(userService.updatePassword(userId, passwordInputDto), HttpStatus.ACCEPTED);
-
-    }
 }
 
-//todo : add DeleteMapping for remove all emails, fix passwordRequest.
+//todo : add DeleteMapping for remove all emails

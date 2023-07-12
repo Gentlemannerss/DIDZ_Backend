@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface StudyGroupRepository extends JpaRepository<StudyGroup, Long> {
     List<StudyGroup> findByProduct_ProductId(Long productId);
+
+    List<StudyGroup> findByUsers_id(Long userId);
 }

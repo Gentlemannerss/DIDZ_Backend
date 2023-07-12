@@ -49,6 +49,7 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/authenticate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/authenticated").authenticated()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/users/{id}").hasAnyRole("USER", "COACH", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/users/{id}").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/users/{id}/authorities").hasAnyRole("USER", "COACH", "ADMIN")
@@ -64,6 +65,7 @@ public class SpringSecurityConfig {
                 .requestMatchers(HttpMethod.DELETE,"/reviews/{id}").hasAnyRole("USER", "ADMIN")
                 .requestMatchers(HttpMethod.GET,"/reviews/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET,"/reviews/product/{productId}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/invoices").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST,"/invoices/new-user").permitAll()
                 .requestMatchers(HttpMethod.POST,"/invoices/existing-user").hasRole("USER")
                 .requestMatchers(HttpMethod.PUT,"/invoices/{invoiceId}").hasRole("ADMIN")
@@ -98,6 +100,7 @@ public class SpringSecurityConfig {
                 // get profile pic is visible for everyone (??) // TODO: what is best practice
                 .requestMatchers(HttpMethod.GET, "/downloadprofilepic/{userId}").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/deleteprofilepic/{userId}").hasAnyRole("USER", "COACH","ADMIN")
+                .requestMatchers(HttpMethod.GET, "/study-group/by-user/{userId}").hasRole("USER")
 
                 .anyRequest().denyAll()
                 .and()

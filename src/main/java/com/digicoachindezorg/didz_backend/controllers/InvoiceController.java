@@ -52,6 +52,7 @@ public class InvoiceController {
     }
     @GetMapping
     public ResponseEntity<List<InvoiceOutputDto>> getAllInvoices() {
-        return new ResponseEntity<>(invoiceService.getAllInvoices(), HttpStatus.OK);
+        List<InvoiceOutputDto> invoices = invoiceService.getAllInvoices();
+        return ResponseEntity.ok(invoices);
     }
 }

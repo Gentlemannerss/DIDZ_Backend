@@ -52,9 +52,9 @@ public class User {
     @JsonIgnore
     private List<StudyGroup> studyGroups;
 
-    @OneToOne(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer")
     @JsonIgnore
-    private Review reviews;
+    private List <Review> reviews;
 
     @OneToMany(mappedBy = "receiver")
     @JsonIgnore

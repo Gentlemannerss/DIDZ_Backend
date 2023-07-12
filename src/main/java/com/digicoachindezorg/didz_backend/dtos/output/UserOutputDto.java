@@ -29,7 +29,7 @@ public class UserOutputDto {
     private String gender;
     private String phoneNumber;
     private List<StudyGroup> studyGroups;
-    private Review reviews;
+    private List<Review> reviews;
     private List<Message> messages;
     private List<ContactForm> contactForms;
     private List<Invoice> invoices;
