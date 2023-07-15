@@ -62,6 +62,8 @@ public class UserInputDto {
 
     private List<Invoice> invoices;
 
+    private String profilePicUrl;
+
     private Boolean enabled;
     @JsonSerialize
     private Set<Authority> authorities;

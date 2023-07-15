@@ -25,70 +25,30 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    //TODO cleanup this controller
-
     @PostMapping("/uploadprofilepic/{userId}")
     public ResponseEntity<Object> singleFileUpload(@PathVariable Long userId, @RequestParam("file") MultipartFile file) throws IOException {
-
-        // next line makes url. example "http://localhost:8080/downloadprofilepic/userId"
         String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/downloadprofilepic/").path(Objects.requireNonNull(userId.toString())).toUriString();
-
         String fileName = fileService.storeFile(file, url, userId);
-
-//        String fileName = fileManagerService.storeFile(file);
-//        URI uri = StringGenerator.uriGenerator(env.getProperty("apiPrefix") + "/files/" + fileName);
-//        return ResponseEntity.created(uri).body("File stored");
-//        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().path("/" + workshopOwnerOutputDto.id).toUriString());
-
-
-
-//        String contentType = file.getContentType();
-//
-//        String fileName = fileService.storeFile(file, url);
-
-        return ResponseEntity.ok(url );
+        return ResponseEntity.ok(url);
     }
-
 
     @GetMapping("/downloadprofilepic/{userId}")
     public ResponseEntity<Object> downloadProfilePic(@PathVariable Long userId, HttpServletRequest request) {
-
         Resource resource = fileService.downLoadFile(userId);
-
-//        this mediaType decides witch type you accept if you only accept 1 type
         MediaType contentType = MediaType.IMAGE_JPEG;
-//        this is going to accept multiple types
-
-//        String mimeType;
-//
-//        try{
-//            mimeType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-//        } catch (IOException e) {
-//            mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-//        }
-
-
-//        for download attachment use next line
-//        return ResponseEntity.ok().contentType(contentType).header(HttpHeaders.CONTENT_DISPOSITION, "attachment;fileName=" + resource.getFilename()).body(resource);
-//        for showing image in browser
         return ResponseEntity.ok().contentType(contentType).header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName=" + resource.getFilename()).body(resource);
     }
 
-
     @DeleteMapping("/deleteprofilepic/{userId}")
     public ResponseEntity<Object> deleteProfilePic(@PathVariable Long userId) {
-
         if (fileService.deleteProfilePic(userId)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
         }
         if (fileService.deleteProfilePic(userId)) {
             return ResponseEntity.ok("Profile picture of user with ID : " + userId + " is deleted");
         } else {
             throw new BadRequestException("file does not exist in the system");
         }
-
-
     }
 }
 

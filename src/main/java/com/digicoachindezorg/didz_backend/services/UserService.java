@@ -109,6 +109,14 @@ public class UserService {
         return "The password has been updated sucessfully.";
     }
 
+    public void deleteAllEmails(Long userId) {
+        if (!userRepository.existsById(userId)) throw new UserNotFoundException(userId);
+        User user = userRepository.findById(userId).get();
+        user.setPrivateEMail(null);
+        user.setWorkEMail(null);
+        userRepository.save(user);
+    }
+
     private UserOutputDto transferUserToUserOutputDto(User user) {
         UserOutputDto userDto = new UserOutputDto();
         userDto.setId(user.getId());

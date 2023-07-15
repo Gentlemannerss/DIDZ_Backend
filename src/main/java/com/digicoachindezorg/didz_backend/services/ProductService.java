@@ -40,7 +40,8 @@ public class ProductService {
         return list;
     }
 
-    /*public List<ProductOutputDto> getProductsByUserId(Long userId) {
+    /* todo: implement this method
+    public List<ProductOutputDto> getProductsByUserId(Long userId) {
         invoiceRepository.findByUserUserId(userId);
         List<Product> products = productRepository.findByUserId(userId);
         return products.stream()

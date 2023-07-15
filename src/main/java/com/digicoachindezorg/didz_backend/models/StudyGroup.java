@@ -21,7 +21,7 @@ public class StudyGroup {
     @GeneratedValue
     private Long groupId;
     private String groupName;
-    @OneToOne //todo: maak hier een ManyToOne relatie van.
+    @OneToOne //todo: dit zou beter een OneToMany kunnen zijn, verantwoordingsdocument.
     @JsonIgnore
     private Product product;
     @ManyToMany

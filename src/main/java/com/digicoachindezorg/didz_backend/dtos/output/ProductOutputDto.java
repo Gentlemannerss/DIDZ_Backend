@@ -22,4 +22,5 @@ public class ProductOutputDto {
     private ProductType productType;
     private StudyGroup studyGroup;
     private Invoice invoice;
+    private String productDescription;
 }

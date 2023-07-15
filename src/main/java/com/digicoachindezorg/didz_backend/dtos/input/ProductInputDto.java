@@ -23,4 +23,5 @@ public class ProductInputDto {
     private ProductType productType;
     private Long studyGroupId;
     private Long invoiceId;
+    private String productDescription;
 }

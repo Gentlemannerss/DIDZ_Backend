@@ -22,7 +22,7 @@ public class Review {
     private Integer score;
     private LocalDate dateOfWriting;
     private String reviewDescription;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne/*(fetch = FetchType.LAZY) todo: beschrijf deze keuze in verantwoordingsdocument, is een bug die nu niet op te lossen is.*/
     @JsonIgnore
     private User customer;
     @ManyToOne

@@ -71,6 +71,10 @@ public class UserController {
         userService.removeAuthority(userId, authority);
         return ResponseEntity.noContent().build();
     }
-}
 
-//todo : add DeleteMapping for remove all emails
+    @DeleteMapping(value = "/{userId}/emails")
+    public ResponseEntity<Object> deleteAllEmails(@PathVariable("userId") Long userId) {
+        userService.deleteAllEmails(userId);
+        return ResponseEntity.noContent().build();
+    }
+}

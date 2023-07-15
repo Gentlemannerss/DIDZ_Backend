@@ -27,12 +27,10 @@ public class Product {
     private List<Review> reviews;
     @Enumerated(EnumType.STRING)
     private ProductType productType;
-    @OneToOne(mappedBy = "product") //todo: maak hier een OneToMany relatie worden.
+    @OneToOne(mappedBy = "product") //todo: dit zou beter een OneToMany kunnen zijn, verantwoordingsdocument.
     @JsonIgnore
     private StudyGroup studyGroup;
     @ManyToMany(mappedBy = "products")
     @JsonIgnore
     private List<Invoice> invoices;
 }
-
-//todo maak een byte voor image.
