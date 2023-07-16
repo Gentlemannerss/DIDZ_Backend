@@ -36,6 +36,7 @@ public class UserOutputDto {
     private Boolean enabled;
     private String apikey;
     private String profilePicUrl;
+    private String fileName;
     @JsonSerialize
     private Set<Authority> authorities;
 

@@ -134,6 +134,8 @@ public class UserService {
         userDto.setReviews(user.getReviews());
         userDto.setMessages(user.getMessages());
         userDto.setContactForms(user.getContactForms());
+        userDto.setProfilePicUrl(user.getProfilePicUrl());
+        userDto.setFileName(user.getFileName());
         return userDto;
     }
 
@@ -181,6 +183,12 @@ public class UserService {
         if (userDto.getContactForms()!=null) {
             user.setContactForms(userDto.getContactForms());
         }
+        if (userDto.getProfilePicUrl()!=null) {
+            user.setProfilePicUrl(userDto.getProfilePicUrl());
+        }
+        if (userDto.getFileName()!=null) {
+            user.setFileName(userDto.getFileName());
+        }
         return user;
     }
 
@@ -226,6 +234,12 @@ public class UserService {
         }
         if (userDto.getContactForms()!=null) {
             user.setContactForms(userDto.getContactForms());
+        }
+        if (userDto.getProfilePicUrl()!=null) {
+            user.setProfilePicUrl(userDto.getProfilePicUrl());
+        }
+        if (userDto.getFileName()!=null) {
+            user.setFileName(userDto.getFileName());
         }
         return user;
     }

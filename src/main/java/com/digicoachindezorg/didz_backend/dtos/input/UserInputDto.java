@@ -63,6 +63,7 @@ public class UserInputDto {
     private List<Invoice> invoices;
 
     private String profilePicUrl;
+    private String fileName;
 
     private Boolean enabled;
     @JsonSerialize
