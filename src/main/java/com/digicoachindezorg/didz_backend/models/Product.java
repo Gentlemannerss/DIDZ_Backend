@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,21 +18,19 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue
-    private String productId;
+    private Long productId;
     private String productName;
+    private String productDescription;
     private Double price;
-    @OneToMany(mappedBy = "product")
-    private List<Review> reviews; //Alles met een List doen in plaats van een ArrayList
-    @Enumerated
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Review> reviews;
+    @Enumerated(EnumType.STRING)
     private ProductType productType;
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product") //todo: dit zou beter een OneToMany kunnen zijn, verantwoordingsdocument.
+    @JsonIgnore
     private StudyGroup studyGroup;
-    @ManyToOne
-    private Invoice invoice;
-
-    /*
-   private List<Byte> images;
-   Dit is voor images, maar maak eerst de rest van de applicatie.
-
-   */
+    @ManyToMany(mappedBy = "products")
+    @JsonIgnore
+    private List<Invoice> invoices;
 }

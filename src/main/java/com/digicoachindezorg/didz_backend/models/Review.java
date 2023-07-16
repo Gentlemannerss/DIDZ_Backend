@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,12 +18,15 @@ import java.time.LocalDate;
 public class Review {
     @Id
     @GeneratedValue
-    private Integer reviewId;
+    private Long reviewId;
     private Integer score;
     private LocalDate dateOfWriting;
     private String reviewDescription;
-    @OneToOne(mappedBy = "reviews")
-    private User customer; // Hier de rol van User<rol customer> opvangen
+    @ManyToOne/*(fetch = FetchType.LAZY) todo: beschrijf deze keuze in verantwoordingsdocument, is een bug die nu niet op te lossen is.*/
+    @JsonIgnore
+    private User customer;
     @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "product_id")
     private Product product;
 }

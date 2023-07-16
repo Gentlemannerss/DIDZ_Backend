@@ -1,5 +1,6 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,19 +19,26 @@ import java.util.List;
 public class Invoice {
     @Id
     @GeneratedValue
-    private Integer invoiceId;
+    private Long invoiceId;
     private LocalDate orderDate;
     private Double totalPrice;
     private String address;
-    private Double travelCost;
+    private String description;
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
-    @OneToMany(mappedBy = "invoice")
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "invoice_product",
+            joinColumns = @JoinColumn(name = "invoice_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<Product> products;
     private Integer amountOfParticipants;
     private String invoiceAddress;
     private Integer frequency;
     private String comments;
     private Boolean termsOfCondition;
-
 }

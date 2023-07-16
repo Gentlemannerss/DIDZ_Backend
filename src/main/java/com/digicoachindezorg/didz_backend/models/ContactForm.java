@@ -1,12 +1,11 @@
 package com.digicoachindezorg.didz_backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +16,7 @@ import java.util.List;
 public class ContactForm {
     @Id
     @GeneratedValue
-    private Integer contactFormId;
+    private Long contactFormId;
     private String companyName;
     private String name;
     private Integer phoneNumber;
@@ -25,5 +24,7 @@ public class ContactForm {
     private String description;
     private Boolean termsOfCondition;
     @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
     private User user;
 }

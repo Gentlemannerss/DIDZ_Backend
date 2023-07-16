@@ -1,14 +1,13 @@
 package com.digicoachindezorg.didz_backend.services;
 
-import com.digicoachindezorg.didz_backend.dtos.ContactFormDto;
-import com.digicoachindezorg.didz_backend.exceptions.NotFoundException;
+import com.digicoachindezorg.didz_backend.dtos.input.ContactFormInputDto;
+import com.digicoachindezorg.didz_backend.dtos.output.ContactFormOutputDto;
+import com.digicoachindezorg.didz_backend.exceptions.RecordNotFoundException;
 import com.digicoachindezorg.didz_backend.models.ContactForm;
 import com.digicoachindezorg.didz_backend.repositories.ContactFormRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,166 +19,97 @@ public class ContactFormService {
         this.contactFormRepository = contactFormRepository;
     }
 
-    public List<ContactFormDto> getAllContactForms() {
+    public List<ContactFormOutputDto> getAllContactForms() {
         List<ContactForm> contactForms = contactFormRepository.findAll();
         return contactForms.stream()
-                .map(this::toContactFormDto)
+                .map(this::transferContactFormToOutputDto)
                 .collect(Collectors.toList());
     }
 
-    public ContactFormDto getContactForm(Long id) {
+    public ContactFormOutputDto getContactForm(Long id) throws RecordNotFoundException {
         ContactForm contactForm = contactFormRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Contact form not found with id " + id));
-        return toContactFormDto(contactForm);
+                .orElseThrow(() -> new RecordNotFoundException("Contact Form not found with id: " + id));
+        return transferContactFormToOutputDto(contactForm);
     }
 
-    public ContactFormDto updateContactForm(Long id, ContactFormDto contactFormDtoToUpdate) throws NotFoundException {
+    public ContactFormOutputDto createContactForm(ContactFormInputDto contactFormDto) {
+        ContactForm contactForm = transferInputDtoToContactForm(contactFormDto);
+        ContactForm createdContactForm = contactFormRepository.save(contactForm);
+        return transferContactFormToOutputDto(createdContactForm);
+    }
+
+    public ContactFormOutputDto updateContactForm(Long id, ContactFormInputDto contactFormDtoToUpdate) throws RecordNotFoundException {
         ContactForm existingContactForm = contactFormRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Contact form not found with id " + id));
+                .orElseThrow(() -> new RecordNotFoundException("Contact Form not found with id: " + id));
 
-        ContactForm updatedContactForm = fromContactFormDto(contactFormDtoToUpdate);
-        updatedContactForm.setContactFormId(existingContactForm.getContactFormId());
+        // Update the fields of the existing contact form
+        ContactForm updatedContactForm = updateInputDtoToContactForm(contactFormDtoToUpdate,existingContactForm);
 
-        ContactForm savedContactForm = contactFormRepository.save(updatedContactForm);
-        return toContactFormDto(savedContactForm);
+        ContactForm savedProduct = contactFormRepository.save(updatedContactForm);
+        return transferContactFormToOutputDto(savedProduct);
     }
 
-    public void deleteContactForm(Long id) throws NotFoundException {
-        Optional<ContactForm> contactFormOptional = contactFormRepository.findById(id);
-        if (contactFormOptional.isPresent()) {
-            ContactForm contactForm = contactFormOptional.get();
-            contactFormRepository.delete(contactForm);
-        } else {
-            throw new NotFoundException("Contact form not found with id " + id);
+    public void deleteContactForm(Long id) throws RecordNotFoundException {
+        if (!contactFormRepository.existsById(id)) {
+            throw new RecordNotFoundException("Contact Form not found with id: " + id);
         }
+        contactFormRepository.deleteById(id);
     }
 
-    public ContactFormDto createContactForm(ContactFormDto contactFormDto) {
-        ContactForm contactForm = fromContactFormDto(contactFormDto);
-        ContactForm savedContactForm = contactFormRepository.save(contactForm);
-        return toContactFormDto(savedContactForm);
+    private ContactFormOutputDto transferContactFormToOutputDto(ContactForm contactForm) {
+        ContactFormOutputDto outputDto = new ContactFormOutputDto();
+        outputDto.setContactFormId(contactForm.getContactFormId());
+        outputDto.setName(contactForm.getName());
+        outputDto.setEMail(contactForm.getEMail());
+        outputDto.setPhoneNumber(contactForm.getPhoneNumber());
+        outputDto.setCompanyName(contactForm.getCompanyName());
+        outputDto.setDescription(contactForm.getDescription());
+        outputDto.setTermsOfCondition(contactForm.getTermsOfCondition());
+        return outputDto;
     }
 
-    private ContactFormDto toContactFormDto(ContactForm contactForm) {
-        ContactFormDto contactFormDto = new ContactFormDto();
-        BeanUtils.copyProperties(contactForm, contactFormDto, "contactFormId" /*Kunt hier nog een ignore meegeveven van bijvoorbeeld ID*/);
-        return contactFormDto;
-    }
-
-    private ContactForm fromContactFormDto(ContactFormDto contactFormDto) {
+    private ContactForm transferInputDtoToContactForm(ContactFormInputDto inputDto) {
         ContactForm contactForm = new ContactForm();
-        BeanUtils.copyProperties(contactFormDto, contactForm);
+        if (inputDto.getName()!=null) {
+            contactForm.setName(inputDto.getName());
+        }
+        if (inputDto.getEMail()!=null) {
+            contactForm.setEMail(inputDto.getEMail());
+        }
+        if (inputDto.getPhoneNumber()!=null) {
+            contactForm.setPhoneNumber(inputDto.getPhoneNumber());
+        }
+        if (inputDto.getCompanyName()!=null) {
+            contactForm.setCompanyName(inputDto.getCompanyName());
+        }
+        if (inputDto.getDescription()!=null) {
+            contactForm.setDescription(inputDto.getDescription());
+        }
+        if (inputDto.getTermsOfCondition()!=null) {
+            contactForm.setTermsOfCondition(inputDto.getTermsOfCondition());
+        }
+        return contactForm;
+    }
+
+    private ContactForm updateInputDtoToContactForm(ContactFormInputDto inputDto, ContactForm contactForm) {
+        if (inputDto.getName()!=null) {
+            contactForm.setName(inputDto.getName());
+        }
+        if (inputDto.getEMail()!=null) {
+            contactForm.setEMail(inputDto.getEMail());
+        }
+        if (inputDto.getPhoneNumber()!=null) {
+            contactForm.setPhoneNumber(inputDto.getPhoneNumber());
+        }
+        if (inputDto.getCompanyName()!=null) {
+            contactForm.setCompanyName(inputDto.getCompanyName());
+        }
+        if (inputDto.getDescription()!=null) {
+            contactForm.setDescription(inputDto.getDescription());
+        }
+        if (inputDto.getTermsOfCondition()!=null) {
+            contactForm.setTermsOfCondition(inputDto.getTermsOfCondition());
+        }
         return contactForm;
     }
 }
-
-/* Versie met Paul:
-package com.digicoachindezorg.didz_backend.services;
-
-import com.digicoachindezorg.didz_backend.dtos.ContactFormDto;
-import com.digicoachindezorg.didz_backend.exceptions.NotFoundException;
-import com.digicoachindezorg.didz_backend.models.ContactForm;
-import com.digicoachindezorg.didz_backend.repositories.ContactFormRepository;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-@Service
-public class ContactFormService {
-
-    private final ContactFormRepository contactFormRepository;
-
-    public ContactFormService(ContactFormRepository contactFormRepository) {
-        this.contactFormRepository = contactFormRepository;
-    }
-
-    public List<ContactForm> getAllContactForms() {
-        return contactFormRepository.findAll();
-    }
-
-    public ContactForm getContactForm(Long id) {
-        return contactFormRepository.findById(id).orElseThrow(() -> new NotFoundException("Contact form not found with id " + id));
-    }
-
-    public ContactForm updateContactForm(Long id, ContactForm contactFormToUpdate) throws NotFoundException {
-        ContactForm existingContactForm = contactFormRepository.findById(id).orElseThrow(() -> new NotFoundException("Contact form not found with id " + id));
-        BeanUtils.copyProperties(contactFormToUpdate, existingContactForm);
-        return contactFormRepository.save(existingContactForm);
-    }
-
-    public void deleteContactForm(Long id) throws NotFoundException {
-        ContactForm contactForm = contactFormRepository.findById(id).orElseThrow(() -> new NotFoundException("Contact form not found with id "+ id));
-        contactFormRepository.delete(contactForm);
-    }
-
-    /*public ContactForm createContactForm(ContactForm contactForm) {
-        if (contactFormRepository.findById(contactForm.getContactFormId()).isPresent()) {
-            throw new AlreadyExistsException("Contact form with " + contactForm.getContactFormId() + " already exists");
-        }
-        return contactFormRepository.save(contactForm);
-    }
-
-
-    public ContactFormDto createContactForm(ContactFormDto contactFormDto) {
-        ContactForm contactForm = new ContactForm();
-        contactForm.setName(contactFormDto.name);
-        contactForm.setCompanyName(contactFormDto.companyName);
-        contactForm.setEMail(contactFormDto.eMail);
-        contactForm.setPhoneNumber(contactFormDto.phoneNumber);
-        contactForm.setDescription(contactFormDto.description);
-        contactForm.setTermsOfCondition(contactFormDto.termsOfCondition);
-
-        ContactForm savedcontactform = contactFormRepository.save(contactForm);
-
-        ContactFormDto contactFormDto1 = new ContactFormDto();
-        contactFormDto1.setName(savedcontactform.getName());
-        //Hier moet ik alle andere entitiy's een set (....get..) geven
-        //Of mogelijk een EntityToDto aanroepen
-
-        return contactFormDto1;
-    }
-
-    //Bean Utils Way:
-    /*public ContactFormDto transferModelToOutputDto(ContactForm contactForm) {
-        ContactFormDto contactFormDto = new ContactFormDto();
-        BeanUtils.copyProperties(contactForm, contactFormDto);
-        return contactFormDto;
-    }
-
-    public ContactForm transferInputDtoToModel(ContactFormDto contactFormDto) {
-        ContactForm contactForm = new ContactForm();
-        BeanUtils.copyProperties(contactFormDto, contactForm, "id");
-        return contactForm;
-    }
-
-    public ContactForm createContactForm(ContactForm contactForm) {
-        return transferModelToOutputDto(contactFormRepository.save(transferInputDtoToModel(ContactFormDto)));
-    }
-
-    public ContactFormDto toContactFormDto() {
-        ContactFormDto contactFormDto = new ContactFormDto();
-        contactFormDto.setContactFormId(this.contactFormId);
-        contactFormDto.setCompanyName(this.companyName);
-        contactFormDto.setName(this.name);
-        contactFormDto.setPhoneNumber(this.phoneNumber);
-        contactFormDto.setEMail(this.eMail);
-        contactFormDto.setDescription(this.description);
-        contactFormDto.setTermsOfCondition(this.termsOfCondition);
-        return contactFormDto;
-    }
-
-    public static ContactForm fromContactFormDto(ContactFormDto contactFormDto) {
-        ContactForm contactForm = new ContactForm();
-        contactForm.setContactFormId(contactFormDto.getContactFormId());
-        contactForm.setCompanyName(contactFormDto.getCompanyName());
-        contactForm.setName(contactFormDto.getName());
-        contactForm.setPhoneNumber(contactFormDto.getPhoneNumber());
-        contactForm.setEMail(contactFormDto.getEMail());
-        contactForm.setDescription(contactFormDto.getDescription());
-        contactForm.setTermsOfCondition(contactFormDto.getTermsOfCondition());
-        return contactForm;
-    }
-}
-
-*/
